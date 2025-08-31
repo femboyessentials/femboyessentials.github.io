@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leaf Essentials Guidelines</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            leaf: { 50: '#f0fdf4',100:'#dcfce7',200:'#bbf7d0',300:'#86efac',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d',800:'#166534',900:'#14532d'}
+          },
+          fontFamily: { display: ['Inter','ui-sans-serif','system-ui','Segoe UI','Roboto','Helvetica Neue','Arial','Noto Sans','sans-serif'] }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-neutral-950 text-neutral-100 font-display selection:bg-leaf-500/30 selection:text-white">
+
+  <!-- Header / Logo -->
+  <header class="p-6 flex flex-col items-center border-b border-white/5">
+    <img src="logo.png" alt="Leaf Essentials Logo" class="h-16 w-auto mb-4">
+    <h1 class="text-3xl font-extrabold">Leaf Essentials Guidelines</h1>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 py-10 space-y-12">
+
+    <!-- Guidelines Section -->
+    <section id="guidelines">
+      <h2 class="text-2xl font-bold mb-4">Server Guidelines</h2>
+      <ul class="list-disc list-inside space-y-2 text-neutral-300 dark:text-neutral-900">
+        <li>Be respectful to all players and staff.</li>
+        <li>No cheating, exploiting, or hacking.</li>
+        <li>Keep chat appropriate and avoid spam.</li>
+        <li>Follow instructions from admins and moderators.</li>
+        <li>Report any rule-breaking through the report system.</li>
+      </ul>
+    </section>
+
+    <!-- Suggestions Section -->
+    <section id="suggestions">
+      <h2 class="text-2xl font-bold mb-4">Suggestions</h2>
+      <p class="text-neutral-300 dark:text-neutral-900 mb-4">Submit your ideas to improve Leaf Essentials! Your suggestions will be sent directly to our Discord server.</p>
+      <form id="suggestionForm" class="space-y-4">
+        <input type="text" name="username" placeholder="Your Minecraft Name" required class="w-full p-2 rounded-lg bg-neutral-900 dark:bg-neutral-200 text-white dark:text-black border border-white/10 dark:border-neutral-400">
+        <textarea name="suggestion" placeholder="Your suggestion..." required class="w-full p-2 rounded-lg bg-neutral-900 dark:bg-neutral-200 text-white dark:text-black border border-white/10 dark:border-neutral-400 h-24"></textarea>
+        <button type="submit" class="px-4 py-2 rounded-lg bg-leaf-600 hover:bg-leaf-500 font-semibold text-white">Send Suggestion</button>
+      </form>
+      <p id="suggestionStatus" class="mt-2 text-sm"></p>
+    </section>
+
+    <!-- Appeals Section -->
+    <section id="appeals">
+      <h2 class="text-2xl font-bold mb-4">Appeals</h2>
+      <p class="text-neutral-300 dark:text-neutral-900 mb-4">Submit an appeal for any bans or issues you’ve encountered. Appeals are sent directly to our staff Discord.</p>
+      <form id="appealForm" class="space-y-4">
+        <input type="text" name="username" placeholder="Your Minecraft Name" required class="w-full p-2 rounded-lg bg-neutral-900 dark:bg-neutral-200 text-white dark:text-black border border-white/10 dark:border-neutral-400">
+        <textarea name="appeal" placeholder="Your appeal..." required class="w-full p-2 rounded-lg bg-neutral-900 dark:bg-neutral-200 text-white dark:text-black border border-white/10 dark:border-neutral-400 h-24"></textarea>
+        <button type="submit" class="px-4 py-2 rounded-lg bg-leaf-600 hover:bg-leaf-500 font-semibold text-white">Submit Appeal</button>
+      </form>
+      <p id="appealStatus" class="mt-2 text-sm"></p>
+    </section>
+
+  </main>
+
+  <footer class="text-center py-6 text-neutral-400 dark:text-neutral-700 border-t border-white/5">
+    © <span id="year"></span> Leaf Essentials. Not affiliated with Mojang or Microsoft.
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Discord Webhook URL (replace with your own)
+    const SUGGESTION_WEBHOOK = "https://discord.com/api/webhooks/1411772351573524602/q3h_liO7CNZyJbEItUZGvSzSxovvXWL0Ih22T8YuWSB8D77RIGuACXvKDyDOz8FnGXcE";
+    const APPEAL_WEBHOOK = "https://discord.com/api/webhooks/1411772802905935902/zG4nB8HOG5XcwLeChw0WB8E896SoSB-Rih_3Dv9n3hZjdLIu-ALs9TCYy8gRtC5QHAzm";
+
+    function sendToDiscord(webhookUrl, username, content, callback) {
+      fetch(webhookUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: `**${username}** submitted:\n${content}` })
+      }).then(response => callback(response.ok)).catch(() => callback(false));
+    }
+
+    // Suggestions Form
+    document.getElementById('suggestionForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = this.username.value;
+      const suggestion = this.suggestion.value;
+      sendToDiscord(SUGGESTION_WEBHOOK, username, suggestion, function(success) {
+        const status = document.getElementById('suggestionStatus');
+        if(success){
+          status.textContent = "Suggestion sent successfully!";
+          status.classList.add("text-green-500");
+          status.classList.remove("text-red-500");
+        } else {
+          status.textContent = "Failed to send suggestion.";
+          status.classList.add("text-red-500");
+          status.classList.remove("text-green-500");
+        }
+      });
+      this.reset();
+    });
+
+    // Appeals Form
+    document.getElementById('appealForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const username = this.username.value;
+      const appeal = this.appeal.value;
+      sendToDiscord(APPEAL_WEBHOOK, username, appeal, function(success) {
+        const status = document.getElementById('appealStatus');
+        if(success){
+          status.textContent = "Appeal sent successfully!";
+          status.classList.add("text-green-500");
+          status.classList.remove("text-red-500");
+        } else {
+          status.textContent = "Failed to send appeal.";
+          status.classList.add("text-red-500");
+          status.classList.remove("text-green-500");
+        }
+      });
+      this.reset();
+    });
+  </script>
+</body>
+</html>
