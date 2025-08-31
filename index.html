@@ -5,16 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MCBEHub - Home</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/scrollreveal"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body class="bg-gray-900 text-white font-sans">
   <!-- Header -->
-  <header class="bg-gray-800 shadow-lg">
+  <header class="bg-gray-800 shadow-lg fixed top-0 w-full z-50">
     <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-green-400">MCBEHub</h1>
-      <nav class="space-x-6">
+      <h1 class="text-2xl font-extrabold text-green-400 tracking-wide">MCBEHub</h1>
+      <nav class="space-x-6 hidden md:block">
         <a href="#" class="hover:text-green-400">Home</a>
-        <a href="https://mcbetools.com/" class="hover:text-green-400">MCBE Tools</a>
+        <a href="https://mcbetools.com/" target="_blank" class="hover:text-green-400">MCBE Tools</a>
         <a href="#features" class="hover:text-green-400">Features</a>
+        <a href="#live" class="hover:text-green-400">Live Addons</a>
         <a href="#community" class="hover:text-green-400">Community</a>
         <a href="#contact" class="hover:text-green-400">Contact</a>
       </nav>
@@ -22,41 +25,59 @@
   </header>
 
   <!-- Hero Section -->
-  <section class="text-center py-20 bg-gradient-to-r from-green-500 to-blue-600">
-    <h2 class="text-4xl md:text-5xl font-extrabold mb-6">Welcome to MCBEHub</h2>
-    <p class="max-w-2xl mx-auto text-lg mb-8">Your central hub for Minecraft Bedrock Edition tools, addons, and resources. Explore everything you need to enhance your Minecraft experience.</p>
-    <a href="https://mcbetools.com/" class="bg-white text-gray-900 px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition">Visit MCBE Tools</a>
+  <section class="relative h-screen flex flex-col items-center justify-center text-center bg-gradient-to-r from-green-500 via-blue-600 to-purple-700 overflow-hidden">
+    <div class="absolute inset-0 bg-[url('https://i.imgur.com/1YcOeF9.png')] opacity-20 bg-cover bg-center animate-pulse"></div>
+    <h2 class="text-5xl md:text-6xl font-extrabold mb-6 drop-shadow-lg">Welcome to <span class="text-green-300">MCBEHub</span></h2>
+    <p class="max-w-2xl mx-auto text-lg md:text-xl mb-8">The ultimate hub for Minecraft Bedrock Edition tools, addons, and resources — connected with MCBE Tools.</p>
+    <div class="space-x-4">
+      <a href="https://mcbetools.com/" target="_blank" class="bg-white text-gray-900 px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition">Explore Tools</a>
+      <a href="#community" class="bg-green-500 px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition">Join Community</a>
+    </div>
   </section>
 
   <!-- Features -->
-  <section id="features" class="py-16 max-w-7xl mx-auto px-6">
-    <h3 class="text-3xl font-bold text-center mb-12">Why Choose MCBEHub?</h3>
+  <section id="features" class="py-20 max-w-7xl mx-auto px-6">
+    <h3 class="text-4xl font-bold text-center mb-16">Why Choose <span class="text-green-400">MCBEHub?</span></h3>
     <div class="grid md:grid-cols-3 gap-10">
-      <div class="bg-gray-800 p-6 rounded-xl shadow-lg text-center">
+      <div class="bg-gray-800 p-6 rounded-2xl shadow-lg text-center transform hover:-translate-y-2 transition">
+        <img src="https://img.icons8.com/color/96/minecraft-logo.png" class="mx-auto mb-4"/>
         <h4 class="text-xl font-semibold mb-4 text-green-400">Addons & Tools</h4>
-        <p>Discover powerful addons, scripts, and utilities designed to improve your Minecraft Bedrock gameplay.</p>
+        <p>Discover powerful addons, scripts, and utilities designed to enhance your Minecraft Bedrock gameplay.</p>
       </div>
-      <div class="bg-gray-800 p-6 rounded-xl shadow-lg text-center">
+      <div class="bg-gray-800 p-6 rounded-2xl shadow-lg text-center transform hover:-translate-y-2 transition">
+        <img src="https://img.icons8.com/color/96/groups.png" class="mx-auto mb-4"/>
         <h4 class="text-xl font-semibold mb-4 text-green-400">Community</h4>
-        <p>Join a growing community of Minecraft players and creators who share resources, tips, and projects.</p>
+        <p>Join creators and players who share resources, projects, and collaborate on awesome Minecraft experiences.</p>
       </div>
-      <div class="bg-gray-800 p-6 rounded-xl shadow-lg text-center">
+      <div class="bg-gray-800 p-6 rounded-2xl shadow-lg text-center transform hover:-translate-y-2 transition">
+        <img src="https://img.icons8.com/color/96/book.png" class="mx-auto mb-4"/>
         <h4 class="text-xl font-semibold mb-4 text-green-400">Guides & Tutorials</h4>
-        <p>Access tutorials, documentation, and guides to help you get the most out of your Minecraft Bedrock Edition.</p>
+        <p>Access step-by-step guides and video tutorials to master Minecraft Bedrock Edition tools and addons.</p>
       </div>
     </div>
   </section>
 
+  <!-- Live Addons Preview -->
+  <section id="live" class="py-20 bg-gray-800">
+    <div class="max-w-7xl mx-auto px-6">
+      <h3 class="text-4xl font-bold text-center mb-16">Featured from <span class="text-green-400">MCBE Tools</span></h3>
+      <div id="addonsGrid" class="grid sm:grid-cols-2 md:grid-cols-3 gap-8"></div>
+    </div>
+  </section>
+
   <!-- Community Section -->
-  <section id="community" class="py-16 bg-gray-800 text-center">
-    <h3 class="text-3xl font-bold mb-6">Be Part of the Community</h3>
-    <p class="max-w-2xl mx-auto mb-8">Connect with creators, players, and developers. Share your creations, discover new content, and collaborate on exciting projects.</p>
-    <a href="#" class="bg-green-500 px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition">Join Now</a>
+  <section id="community" class="py-20 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-center">
+    <h3 class="text-4xl font-bold mb-6">Be Part of the <span class="text-green-400">Community</span></h3>
+    <p class="max-w-2xl mx-auto mb-8">Connect with creators, share your creations, and collaborate on projects that push Minecraft Bedrock forward.</p>
+    <div class="space-x-4">
+      <a href="#" class="bg-green-500 px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition">Join Discord</a>
+      <a href="#" class="bg-blue-500 px-6 py-3 rounded-full font-semibold hover:bg-blue-600 transition">Follow GitHub</a>
+    </div>
   </section>
 
   <!-- Contact Section -->
-  <section id="contact" class="py-16 max-w-4xl mx-auto px-6 text-center">
-    <h3 class="text-3xl font-bold mb-6">Get in Touch</h3>
+  <section id="contact" class="py-20 max-w-4xl mx-auto px-6 text-center">
+    <h3 class="text-4xl font-bold mb-6">Get in Touch</h3>
     <p class="mb-8">Have questions or want to collaborate? Reach out to us anytime!</p>
     <form class="grid gap-4">
       <input type="text" placeholder="Your Name" class="p-3 rounded-lg text-black" required>
@@ -68,7 +89,47 @@
 
   <!-- Footer -->
   <footer class="bg-gray-900 border-t border-gray-700 py-6 text-center">
+    <div class="flex justify-center space-x-6 mb-4">
+      <a href="#"><img src="https://img.icons8.com/fluency/48/discord-logo.png"/></a>
+      <a href="#"><img src="https://img.icons8.com/fluency/48/github.png"/></a>
+      <a href="#"><img src="https://img.icons8.com/fluency/48/youtube-play.png"/></a>
+    </div>
     <p class="text-gray-400">&copy; 2025 MCBEHub. Connected with <a href="https://mcbetools.com/" class="text-green-400 hover:underline">MCBE Tools</a>.</p>
   </footer>
+
+  <!-- Scripts -->
+  <script>
+    // Scroll reveal animations
+    ScrollReveal().reveal('h2, h3, .bg-gray-800, form, footer', {
+      delay: 200,
+      duration: 800,
+      distance: '50px',
+      origin: 'bottom',
+      reset: false
+    });
+
+    // Example fetching addons (replace with real API if available)
+    async function loadAddons() {
+      const grid = document.getElementById('addonsGrid');
+      const dummyAddons = [
+        { title: 'Leaf Essentials', desc: 'A core addon with custom UI and settings.', img: 'https://i.imgur.com/N5hJ7yq.png', link: 'https://mcbetools.com/'},
+        { title: 'PvP Practice', desc: 'Train your PvP skills with multiple modes.', img: 'https://i.imgur.com/xZ7PPRM.png', link: 'https://mcbetools.com/'},
+        { title: 'AntiCheat', desc: 'Protect your world with powerful detection tools.', img: 'https://i.imgur.com/5iVbGVk.png', link: 'https://mcbetools.com/'},
+      ];
+      dummyAddons.forEach(addon => {
+        const card = document.createElement('div');
+        card.className = 'bg-gray-900 p-6 rounded-2xl shadow-lg hover:-translate-y-2 transition';
+        card.innerHTML = `
+          <img src="${addon.img}" class="rounded-lg mb-4"/>
+          <h4 class="text-xl font-semibold text-green-400 mb-2">${addon.title}</h4>
+          <p class="mb-4 text-gray-300">${addon.desc}</p>
+          <a href="${addon.link}" target="_blank" class="text-green-400 hover:underline">View Addon →</a>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    loadAddons();
+  </script>
 </body>
 </html>
