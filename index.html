@@ -121,27 +121,28 @@
   <!-- Features / Download / Community sections remain unchanged -->
 
   <!-- Secret Admin Panel -->
-  <section id="admin-section">
-    <h2 class="blink">🚨 UGLY ADMIN LOGIN 🚨</h2>
-    <p>Enter your terrible credentials to proceed.</p>
-    <input type="text" id="admin-user" placeholder="Username">
-    <input type="password" id="admin-pass" placeholder="Password">
-    <button onclick="loginAdmin()">LOGIN</button>
+  <!-- Change the section to start hidden but togglable -->
+<section id="admin-section" style="display:none;">
+  <h2 class="blink">🚨 UGLY ADMIN LOGIN 🚨</h2>
+  <p>Enter your terrible credentials to proceed.</p>
+  <input type="text" id="admin-user" placeholder="Username">
+  <input type="password" id="admin-pass" placeholder="Password">
+  <button onclick="loginAdmin()">LOGIN</button>
 
-    <div id="admin-panel">
-      <h2 class="blink">WELCOME TO THE WORST ADMIN PANEL EVER</h2>
-      <button onclick="alert('Player Banned!')">Ban Player</button>
-      <button onclick="alert('Server Deleted!')">Delete Server</button>
-      <button onclick="alert('999 TNT Spawned!')">Spawn 999 TNT</button>
-      <marquee behavior="scroll" direction="left">🔥 WARNING: THIS PANEL IS UGLY 🔥</marquee>
-      <table>
-        <tr><th>Server Stat</th><th>Value</th></tr>
-        <tr><td>Players Online</td><td>420</td></tr>
-        <tr><td>TPS</td><td>3</td></tr>
-        <tr><td>Lag</td><td>MAX</td></tr>
-      </table>
-    </div>
-  </section>
+  <div id="admin-panel" style="display:none;">
+    <h2 class="blink">WELCOME TO THE WORST ADMIN PANEL EVER</h2>
+    <button onclick="alert('Player Banned!')">Ban Player</button>
+    <button onclick="alert('Server Deleted!')">Delete Server</button>
+    <button onclick="alert('999 TNT Spawned!')">Spawn 999 TNT</button>
+    <marquee behavior="scroll" direction="left">🔥 WARNING: THIS PANEL IS UGLY 🔥</marquee>
+    <table>
+      <tr><th>Server Stat</th><th>Value</th></tr>
+      <tr><td>Players Online</td><td>420</td></tr>
+      <tr><td>TPS</td><td>3</td></tr>
+      <tr><td>Lag</td><td>MAX</td></tr>
+    </table>
+  </div>
+</section>
 
   <!-- Footer -->
   <footer class="border-t border-white/5">
@@ -160,15 +161,22 @@
     document.getElementById('year').textContent = new Date().getFullYear();
 
     function loginAdmin() {
-      const user = document.getElementById('admin-user').value;
-      const pass = document.getElementById('admin-pass').value;
-      if (user && pass) {
-        document.getElementById('admin-panel').style.display = 'block';
-        alert('Welcome, ' + user + '! Enjoy this hideous panel.');
-      } else {
-        alert('Wrong credentials! (not really, but still)');
-      }
-    }
+  const user = document.getElementById('admin-user').value;
+  const pass = document.getElementById('admin-pass').value;
+  if (user && pass) {
+    document.getElementById('admin-panel').style.display = 'block';
+    alert('Welcome, ' + user + '! Enjoy this hideous panel.');
+  } else {
+    alert('Wrong credentials! (not really, but still)');
+  }
+}
+
+// Reveal admin section when clicking footer link
+document.querySelector('a[href="#admin-section"]').addEventListener('click', e => {
+  e.preventDefault();
+  document.getElementById('admin-section').style.display = 'block';
+  document.getElementById('admin-section').scrollIntoView({ behavior: 'smooth' });
+});
   </script>
 </body>
 </html>
