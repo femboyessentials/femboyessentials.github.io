@@ -1,368 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MCBEHub — The Ultimate MCBE Tools Hub</title>
-
-  <!-- Tailwind (for utility base) + Inter and Pixel font -->
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.cdnfonts.com/css/minecraft" rel="stylesheet">
-
-  <!-- GSAP for premium motion, VanillaTilt for card tilt, SimpleBar for nice scrollbars -->
-  <script src="https://unpkg.com/vanilla-tilt@1.7.0/dist/vanilla-tilt.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YT Music Search</title>
   <style>
-    :root{
-      --bg:#06121a; --card:#0f1724; --accent:#00ff88; --muted:#9ca3af;
-    }
-    html,body{height:100%;}
-    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial; background:linear-gradient(180deg,#020617 0%, #071226 60%); color:#e6eef6;}
-
-    /* Pixel / Minecraft vibe headline */
-    .pixel { font-family: 'Minecraft', Inter, sans-serif; }
-
-    /* Glowing neon accent */
-    .neon { text-shadow:0 0 8px rgba(0,255,136,0.12), 0 0 20px rgba(0,255,136,0.06); }
-
-    /* Floating particles canvas */
-    #particle-canvas{position:fixed; inset:0; z-index:-1; pointer-events:none;}
-
-    /* click ripple */
-    .ripple{position:absolute;border-radius:9999px;transform:scale(0);opacity:0.6;pointer-events:none;}
-
-    /* card hover outline */
-    .card-outline{box-shadow:0 6px 30px rgba(0,0,0,0.6), inset 0 0 0 1px rgba(255,255,255,0.02);}
-
-    /* custom scrollbar */
-    ::-webkit-scrollbar{width:10px;height:10px}
-    ::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#0ea5a8,#058b7f);border-radius:10px}
-
-    /* responsive hero text scaling */
-    @media (max-width:768px){.hero-title{font-size:2rem}}
+    body { font-family: Arial, sans-serif; background: #111; color: #eee; margin: 0; padding: 0; }
+    header { background: #1db954; padding: 1rem; text-align: center; }
+    input[type="text"] { width: 60%; padding: 0.5rem; font-size: 1rem; border-radius: 5px; border: none; }
+    button { padding: 0.5rem 1rem; font-size: 1rem; border-radius: 5px; border: none; background: #fff; cursor: pointer; }
+    #results { display: flex; flex-wrap: wrap; justify-content: center; margin: 1rem; }
+    .song { background: #222; margin: 0.5rem; padding: 1rem; width: 300px; border-radius: 10px; }
+    .song img { width: 100%; border-radius: 10px; }
+    .song h3 { margin: 0.5rem 0 0.2rem 0; }
+    .song a { color: #1db954; text-decoration: none; }
   </style>
 </head>
 <body>
-  <canvas id="particle-canvas"></canvas>
 
-  <!-- Top navigation (animated) -->
-  <header class="w-full fixed top-0 left-0 z-50 backdrop-blur-md bg-[rgba(3,6,12,0.45)] border-b border-b-[rgba(255,255,255,0.03)]">
-    <div class="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-      <a class="flex items-center gap-3" href="#" aria-label="MCBEHub">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-blue-400 flex items-center justify-center shadow-xl">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden>
-            <rect x="3" y="3" width="18" height="18" rx="3" fill="black" opacity="0.15"/>
-            <path d="M7 12h10M12 7v10" stroke="#001" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
-          </svg>
-        </div>
-        <div>
-          <div class="text-base font-extrabold pixel neon">MCBEHub</div>
-          <div class="text-xs text-gray-400">Powered by MCBE Tools</div>
-        </div>
-      </a>
-
-      <nav class="hidden md:flex items-center gap-6 text-sm">
-        <a href="#features" class="hover:text-white/90 transition">Features</a>
-        <a href="#live" class="hover:text-white/90 transition">Live Addons</a>
-        <a href="#community" class="hover:text-white/90 transition">Community</a>
-        <a href="#docs" class="hover:text-white/90 transition">Docs</a>
-        <button id="cta-join" class="ml-2 bg-gradient-to-r from-green-400 to-teal-400 text-black px-4 py-2 rounded-lg font-semibold shadow hover:scale-[1.03] transition-transform">Join Discord</button>
-      </nav>
-
-      <div class="md:hidden">
-        <button id="mobile-menu-btn" class="p-2 rounded-md bg-white/6">Menu</button>
-      </div>
-    </div>
+  <header>
+    <h1>YT Music Search</h1>
+    <input type="text" id="search" placeholder="Search for a song..." />
+    <button onclick="searchSong()">Search</button>
   </header>
 
-  <!-- Hero -->
-  <main class="pt-20">
-    <section class="relative min-h-[78vh] flex items-center justify-center px-6">
-      <div class="max-w-6xl w-full grid grid-cols-12 gap-6 items-center">
-        <div class="col-span-12 md:col-span-7">
-          <h1 class="hero-title text-6xl md:text-7xl font-extrabold leading-tight mb-4 pixel">
-            The <span class="text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-cyan-300 neon">Ultimate</span>
-            <br />MCBE Hub for <span class="text-green-400">MCBETools</span>
-          </h1>
-          <p class="text-gray-300 max-w-2xl mb-6">Discover curated addons, live previews, one-click installs, and exclusive tools — all hand-picked for Minecraft Bedrock Edition creators and server owners.</p>
-
-          <div class="flex flex-wrap gap-3">
-            <a id="explore-btn" href="#live" class="relative overflow-hidden inline-flex items-center gap-3 bg-gradient-to-r from-green-400 to-teal-400 text-black px-5 py-3 rounded-full font-semibold shadow-lg transform transition active:scale-95">Explore Addons</a>
-
-            <button id="demo-btn" class="relative overflow-hidden inline-flex items-center gap-3 border border-white/6 px-5 py-3 rounded-full font-semibold text-white hover:bg-white/3 transition">Open Demo</button>
-
-            <a href="#docs" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/4 hover:bg-white/6 transition">Docs</a>
-          </div>
-
-          <div class="mt-6 flex items-center gap-4 text-sm text-gray-400">
-            <div class="flex items-center gap-2">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" stroke="#64f6b0" stroke-width="1.2" opacity="0.7"/></svg>
-              <span>One-click installs</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#9ad" stroke-width="1.2" opacity="0.6"/></svg>
-              <span>Curated & tested</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Showcase cards -->
-        <div class="col-span-12 md:col-span-5">
-          <div class="space-y-4">
-            <div data-tilt class="card-outline bg-gradient-to-b from-[#071827] to-[#06151f] rounded-2xl p-4 shadow-xl relative overflow-hidden" style="min-height:140px">
-              <div class="absolute -right-6 -top-8 opacity-20 rotate-[20deg] pointer-events-none scale-125">
-                <img src="https://i.imgur.com/8Km9tLL.png" class="w-40" alt="pixel"/>
-              </div>
-              <div class="flex items-start gap-4">
-                <img src="https://i.imgur.com/N5hJ7yq.png" class="w-14 h-14 rounded-lg object-cover shadow-md"/>
-                <div class="flex-1">
-                  <div class="flex items-center justify-between">
-                    <div>
-                      <h4 class="font-bold text-lg">Leaf Essentials</h4>
-                      <div class="text-xs text-gray-400">Custom UI + Server Menu</div>
-                    </div>
-                    <div class="text-sm text-green-300 font-semibold">v1.21</div>
-                  </div>
-                  <p class="text-sm text-gray-300 mt-2">Rich feature set including admin panel, shop, and minigame teleporters. Click to preview.</p>
-                </div>
-              </div>
-            </div>
-
-            <div data-tilt class="card-outline bg-gradient-to-b from-[#071827] to-[#06151f] rounded-2xl p-4 shadow-xl relative overflow-hidden" style="min-height:140px">
-              <div class="flex items-start gap-4">
-                <img src="https://i.imgur.com/xZ7PPRM.png" class="w-14 h-14 rounded-lg object-cover shadow-md"/>
-                <div class="flex-1">
-                  <div class="flex items-center justify-between">
-                    <div>
-                      <h4 class="font-bold text-lg">PvP Practice</h4>
-                      <div class="text-xs text-gray-400">Queue system & kits</div>
-                    </div>
-                    <div class="text-sm text-green-300 font-semibold">Popular</div>
-                  </div>
-                  <p class="text-sm text-gray-300 mt-2">Queue matchmaking for multiple modes: Swords, Maces, FFA. Teleport + kit assignment included.</p>
-                </div>
-              </div>
-            </div>
-
-            <div data-tilt class="card-outline bg-gradient-to-b from-[#071827] to-[#06151f] rounded-2xl p-4 shadow-xl relative overflow-hidden" style="min-height:140px">
-              <div class="flex items-start gap-4">
-                <img src="https://i.imgur.com/5iVbGVk.png" class="w-14 h-14 rounded-lg object-cover shadow-md"/>
-                <div class="flex-1">
-                  <div class="flex items-center justify-between">
-                    <div>
-                      <h4 class="font-bold text-lg">Advanced AntiCheat</h4>
-                      <div class="text-xs text-gray-400">Nuker, Reach, Speed</div>
-                    </div>
-                    <div class="text-sm text-green-300 font-semibold">Stable</div>
-                  </div>
-                  <p class="text-sm text-gray-300 mt-2">Server-side checks and alerts for suspicious players with soft and hard actions.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- Live Addons Grid (full featured) -->
-    <section id="live" class="py-20">
-      <div class="max-w-7xl mx-auto px-6">
-        <div class="flex items-center justify-between mb-8">
-          <h2 class="text-3xl font-bold">Featured Addons</h2>
-          <div class="flex items-center gap-3">
-            <input id="search" type="search" placeholder="Search addons..." class="px-3 py-2 rounded-lg bg-[#071827] border border-white/6 outline-none" />
-            <select id="sort" class="px-3 py-2 rounded-lg bg-[#071827] border border-white/6">
-              <option value="popular">Most Popular</option>
-              <option value="new">Newest</option>
-              <option value="rating">Top Rated</option>
-            </select>
-          </div>
-        </div>
-
-        <div id="addons" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" aria-live="polite"></div>
-
-        <div id="no-results" class="hidden text-center text-gray-400 mt-8">No addons match your search.</div>
-      </div>
-    </section>
-
-    <!-- Features deeper section -->
-    <section id="features" class="py-20 bg-gradient-to-b from-[#031018] to-transparent">
-      <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
-        <div>
-          <h3 class="text-3xl font-bold mb-4">Built for creators — designed for players</h3>
-          <p class="text-gray-300 mb-6">MCBEHub aggregates tested addons, instruments for server operators, and learning resources so you can ship polished Bedrock experiences faster.</p>
-
-          <ul class="space-y-3">
-            <li class="flex items-start gap-3"><div class="mt-1 text-green-300">●</div><div><b>One-click install</b> — easy deploy to compatible platforms.</div></li>
-            <li class="flex items-start gap-3"><div class="mt-1 text-green-300">●</div><div><b>Preview modals</b> — inspect screenshots, changelogs, and install scripts without leaving the hub.</div></li>
-            <li class="flex items-start gap-3"><div class="mt-1 text-green-300">●</div><div><b>Curated packs</b> — bundles for PvP, Minigames, and Servers.</div></li>
-          </ul>
-        </div>
-        <div>
-          <div class="bg-[#071827] p-6 rounded-2xl card-outline shadow-xl">
-            <h4 class="font-bold text-lg mb-3">Why hub + tools?</h4>
-            <p class="text-gray-300">Because creators need a single trustworthy place to discover and safely use addons. We test compatibility and provide clear install instructions.</p>
-
-            <div class="mt-6 grid grid-cols-2 gap-3">
-              <div class="p-3 bg-[#04121a] rounded-lg">Auto-update</div>
-              <div class="p-3 bg-[#04121a] rounded-lg">Version history</div>
-              <div class="p-3 bg-[#04121a] rounded-lg">Security scans</div>
-              <div class="p-3 bg-[#04121a] rounded-lg">Community ratings</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Community -->
-    <section id="community" class="py-20">
-      <div class="max-w-7xl mx-auto px-6 text-center">
-        <h3 class="text-3xl font-bold mb-4">Community</h3>
-        <p class="text-gray-300 mb-6">Join the Discord to talk development, request features, and share builds.</p>
-        <div class="flex items-center justify-center gap-4">
-          <a href="#" class="px-5 py-3 rounded-lg bg-gradient-to-r from-indigo-500 to-pink-500 font-semibold">Discord</a>
-          <a href="#" class="px-5 py-3 rounded-lg bg-[#0b1220] border border-white/6">GitHub</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-10 mt-10 border-t border-white/6">
-      <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-4">
-        <div>
-          <div class="font-extrabold pixel text-xl">MCBEHub</div>
-          <div class="text-sm text-gray-400">Copyright © 2025 — Connected with MCBE Tools</div>
-        </div>
-        <div class="flex items-center gap-4">
-          <a class="text-sm text-gray-300 hover:text-white">Terms</a>
-          <a class="text-sm text-gray-300 hover:text-white">Privacy</a>
-        </div>
-      </div>
-    </footer>
-  </main>
-
-  <!-- Addon Modal -->
-  <div id="modal" class="fixed inset-0 hidden items-center justify-center z-50 bg-[rgba(2,6,12,0.6)]">
-    <div class="max-w-3xl w-full bg-[#071827] rounded-2xl p-6 shadow-xl">
-      <button id="modal-close" class="ml-auto block mb-4 px-3 py-1 bg-white/6 rounded">Close</button>
-      <div id="modal-content"></div>
-    </div>
-  </div>
+  <div id="results"></div>
 
   <script>
-    // ---------- Particles background (lightweight) ----------
-    const canvas = document.getElementById('particle-canvas');
-    const ctx = canvas.getContext('2d');
-    let W = canvas.width = innerWidth;
-    let H = canvas.height = innerHeight;
-    window.addEventListener('resize',()=>{W=canvas.width=innerWidth;H=canvas.height=innerHeight});
-    const particles=[];
-    for(let i=0;i<70;i++){particles.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.5,dx:(Math.random()-0.5)*0.3,dy:(Math.random()*0.4+0.1)});} 
-    function draw(){ctx.clearRect(0,0,W,H);particles.forEach(p=>{p.x+=p.dx;p.y+=p.dy; if(p.x>W)p.x=0; if(p.x<0)p.x=W; if(p.y>H)p.y=0; ctx.beginPath(); ctx.fillStyle='rgba(0,255,136,0.06)'; ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();}); requestAnimationFrame(draw);} draw();
+    async function searchSong() {
+      const query = document.getElementById('search').value;
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '<p>Searching...</p>';
 
-    // ---------- Interactive utility: ripple on click ----------
-    function rippleAt(x,y,container=document.body){const el=document.createElement('div');el.className='ripple';el.style.left=(x-50)+'px';el.style.top=(y-50)+'px';el.style.width='100px';el.style.height='100px';el.style.background='radial-gradient(circle, rgba(0,255,136,0.14) 0%, rgba(0,255,136,0.02) 60%, transparent 100%)';container.appendChild(el);gsap.to(el,{scale:3,opacity:0,duration:0.8,ease:'power1.out',onComplete:()=>el.remove()});}
-    document.addEventListener('click',e=>{rippleAt(e.clientX,e.clientY);});
+      try {
+        // Using the YouTube search API (no API key needed for simple search)
+        const response = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=${encodeURIComponent(query)}&maxResults=10&key=AIzaSyAuLSb429Bf8Yh_YZwnGmvkW_Pg50zs3gM`);
+        const data = await response.json();
 
-    // ---------- Tilt effect for cards ----------
-    document.querySelectorAll('[data-tilt]').forEach(el=>{VanillaTilt.init(el,{max:10,speed:700,glare:true,'max-glare':0.08})});
+        resultsDiv.innerHTML = '';
+        data.items.forEach(item => {
+          const videoId = item.id.videoId;
+          const title = item.snippet.title;
+          const thumb = item.snippet.thumbnails.high.url;
+          const channel = item.snippet.channelTitle;
 
-    // ---------- GSAP entrance animations ----------
-    gsap.from('.hero-title',{y:30,opacity:0,duration:1,stagger:0.08,ease:'power3.out'});
-    gsap.from('[data-tilt]',{y:20,opacity:0,duration:0.8,stagger:0.12,delay:0.2});
-
-    // ---------- Demo data (replace with live fetch to MCBE Tools API if available) ----------
-    const ADDONS = [
-      {id:'leaf',title:'Leaf Essentials',desc:'Custom UI, admin panel, shop, minigames',img:'https://i.imgur.com/N5hJ7yq.png',tags:['ui','admin'],rating:4.8,downloads:12400},
-      {id:'pvp',title:'PvP Practice',desc:'Queue system with kits and teleportation',img:'https://i.imgur.com/xZ7PPRM.png',tags:['pvp','kits'],rating:4.7,downloads:9300},
-      {id:'anticheat',title:'Advanced AntiCheat',desc:'Detects nuker, reach, speed, flight',img:'https://i.imgur.com/5iVbGVk.png',tags:['server','security'],rating:4.5,downloads:7600},
-      {id:'minigames',title:'Hyper Racers',desc:'Fast-paced track-based racing addon',img:'https://i.imgur.com/cp8XbQ6.png',tags:['minigame','race'],rating:4.6,downloads:4200},
-      {id:'bedwars',title:'BedWars Classic',desc:'Fully featured BedWars with lobbies',img:'https://i.imgur.com/2nXgYQJ.png',tags:['minigame','team'],rating:4.9,downloads:20400}
-    ];
-
-    const addonsEl = document.getElementById('addons');
-    const noResults = document.getElementById('no-results');
-
-    function renderAddons(list){addonsEl.innerHTML=''; if(list.length===0){noResults.classList.remove('hidden'); return;} noResults.classList.add('hidden');
-      list.forEach(a=>{
-        const card = document.createElement('article'); card.className='bg-[#071827] p-4 rounded-2xl shadow-lg hover:scale-[1.02] transition transform relative overflow-hidden';
-        card.innerHTML = `
-          <img src="${a.img}" alt="${a.title}" class="w-full h-40 object-cover rounded-lg mb-3"/>
-          <div class="flex items-start justify-between gap-3">
-            <div>
-              <h4 class="font-bold text-lg">${a.title}</h4>
-              <p class="text-sm text-gray-300">${a.desc}</p>
-              <div class="mt-3 text-xs text-gray-400">${a.tags.map(t=>`<span class=\"px-2 py-1 mr-2 bg-white/2 rounded\">${t}</span>`).join('')}</div>
-            </div>
-            <div class="text-right">
-              <div class="text-sm text-green-300 font-semibold">${a.rating}★</div>
-              <div class="text-xs text-gray-400">${a.downloads.toLocaleString()} downloads</div>
-              <button data-id="${a.id}" class="open-preview mt-4 px-3 py-1 rounded bg-gradient-to-r from-green-400 to-teal-400 text-black font-semibold">Preview</button>
-            </div>
-          </div>
-        `;
-        addonsEl.appendChild(card);
-      });
-
-      // animate newly inserted cards
-      gsap.from(addonsEl.children,{y:20,opacity:0,duration:0.6,stagger:0.08});
+          const songDiv = document.createElement('div');
+          songDiv.className = 'song';
+          songDiv.innerHTML = `
+            <img src="${thumb}" alt="${title}">
+            <h3>${title}</h3>
+            <p>${channel}</p>
+            <iframe width="100%" height="180" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+            <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank">Open on YouTube</a>
+          `;
+          resultsDiv.appendChild(songDiv);
+        });
+      } catch (err) {
+        resultsDiv.innerHTML = '<p>Error fetching songs. Make sure you have a valid API key.</p>';
+        console.error(err);
+      }
     }
+  </script>
 
-    renderAddons(ADDONS);
-
-    // ---------- Search + Sort ----------
-    const search = document.getElementById('search'); const sort = document.getElementById('sort');
-    function filterAndSort(){let q=search.value.trim().toLowerCase(); let list=ADDONS.filter(a=>a.title.toLowerCase().includes(q)||a.desc.toLowerCase().includes(q)||a.tags.join(' ').includes(q));
-      const mode=sort.value; if(mode==='popular') list = list.sort((a,b)=>b.downloads-a.downloads); if(mode==='new') list=list.sort((a,b)=>b.id.localeCompare(a.id)); if(mode==='rating') list=list.sort((a,b)=>b.rating-b.rating);
-      renderAddons(list);
-    }
-    search.addEventListener('input',filterAndSort); sort.addEventListener('change',filterAndSort);
-
-    // ---------- Modal preview ----------
-    const modal = document.getElementById('modal'); const modalContent = document.getElementById('modal-content');
-    document.addEventListener('click',e=>{
-      const btn = e.target.closest('.open-preview'); if(!btn) return; const id = btn.dataset.id; const addon = ADDONS.find(x=>x.id===id); if(!addon) return;
-      modalContent.innerHTML = `
-        <div class=\"grid md:grid-cols-2 gap-4\"> 
-          <img src=\"${addon.img}\" class=\"w-full rounded-lg\"/>
-          <div>
-            <h3 class=\"text-2xl font-bold\">${addon.title}</h3>
-            <p class=\"text-sm text-gray-300 mt-2\">${addon.desc}</p>
-            <div class=\"mt-4\"> <b>Rating:</b> ${addon.rating} ★ &nbsp; <b>Downloads:</b> ${addon.downloads.toLocaleString()}</div>
-            <div class=\"mt-6 flex gap-3\"> 
-              <button id=\"install-btn\" class=\"px-4 py-2 rounded bg-green-400 text-black font-semibold\">Install</button>
-              <button id=\"dl-btn\" class=\"px-4 py-2 rounded border border-white/6\">Download ZIP</button>
-  </div>
-  </div>
-</div>
-`; modal.classList.remove('hidden'); gsap.from('#modal .rounded-2xl',{scale:0.96,opacity:0,duration:0.3});
-});
-document.getElementById('modal-close').addEventListener('click',()=>{modal.classList.add('hidden')});
-
-
-// ---------- Keyboard shortcuts ----------
-document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault(); search.focus(); gsap.fromTo(search,{scale:0.96},{scale:1,duration:0.2});}});
-
-
-// ---------- CTA button microinteraction ----------
-document.getElementById('cta-join').addEventListener('click',()=>{gsap.to('#cta-join',{scale:1.06,duration:0.08,yoyo:true,repeat:1}); window.open('#','_blank');});
-
-
-// ---------- Mobile menu (simple) ----------
-const mobileBtn = document.getElementById('mobile-menu-btn'); mobileBtn.addEventListener('click',()=>{const m=document.createElement('div');m.className='fixed inset-0 bg-black/60 z-50 flex flex-col p-6 gap-4'; m.innerHTML=`<a class=\"text-white text-xl font-bold\" href=\"#live\">Live Addons</a><a class=\"text-white\" href=\"#docs\">Docs</a><a class=\"text-white\" href=\"#community\">Community</a><button id=\"closemobile\" class=\"mt-auto py-2 px-4 bg-white/6 rounded\">Close</button>`; document.body.appendChild(m); document.getElementById('closemobile').addEventListener('click',()=>m.remove());});
-
-
-// ---------- Accessibility polite announce when search returns zero ----------
-const liveRegion = document.createElement('div'); liveRegion.setAttribute('aria-live','polite'); liveRegion.className='sr-only'; document.body.appendChild(liveRegion);
-search.addEventListener('input',()=>{setTimeout(()=>{ const count = document.getElementById('addons').children.length; liveRegion.textContent = count + ' addons displayed'; },300)});
-
-
-// ---------- Small enhancement: pulse newest badge ----------
-// (already handled visually by CSS gradients; further ideas can be added)
-</script>
 </body>
 </html>
+
