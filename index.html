@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Leaf Essentials — Minecraft Bedrock Addon</title>
-  <meta name="description" content="Leaf Essentials is a feature-rich Minecraft Bedrock Edition addon with custom UIs, events, chest GUIs, tab UIs, bindable commands, land claims, leaderboards, reports, and more." />
+  <meta name="description" content="Leaf Essentials is a feature-rich Minecraft Bedrock Edition addon: custom UIs, events, chest GUIs, tab UIs, bindable commands, land claims, leaderboards, reports, and more. Updated for Minecraft 1.21.90." />
   <meta name="theme-color" content="#16a34a" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Leaf Essentials — Minecraft Bedrock Addon" />
+  <meta property="og:description" content="Custom UIs, events, chest & tab GUIs, land claims, leaderboards, reports, and more. Updated for Minecraft 1.21.90." />
+  <meta property="og:image" content="leaf-essentials-hero.png" />
+  <meta name="twitter:card" content="summary_large_image" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
       darkMode: 'class',
       theme: {
         extend: {
-          colors: { leaf: {50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',300:'#86efac',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d',800:'#166534',900:'#14532d'} },
+          colors: {
+            leaf: { 50: '#f0fdf4',100:'#dcfce7',200:'#bbf7d0',300:'#86efac',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d',800:'#166534',900:'#14532d'}
+          },
           fontFamily: { display: ['Inter','ui-sans-serif','system-ui','Segoe UI','Roboto','Helvetica Neue','Arial','Noto Sans','sans-serif'] },
           boxShadow: { glow: '0 0 0 6px rgba(34,197,94,0.15)' }
         }
@@ -25,174 +32,186 @@
   <style>
     .bg-grid { background-image: linear-gradient(to right, rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.06) 1px, transparent 1px); background-size: 40px 40px; }
     .hero-blob { background: radial-gradient(1200px 600px at 10% 10%, rgba(34,197,94,.15), transparent 60%), radial-gradient(800px 400px at 90% 20%, rgba(16,185,129,.15), transparent 50%), radial-gradient(600px 600px at 50% 100%, rgba(59,130,246,.12), transparent 50%); filter: saturate(1.05); }
-    #sidebar { transition: transform 0.3s ease; }
   </style>
 </head>
 <body class="bg-neutral-950 text-neutral-100 font-display selection:bg-leaf-500/30 selection:text-white">
 
-<!-- Left Sidebar -->
-<div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-neutral-900 dark:bg-neutral-200 shadow-xl transform -translate-x-full md:translate-x-0 z-50 flex flex-col">
-  <div class="p-6 flex flex-col items-center border-b border-white/5">
-    <img src="logo.png" alt="Leaf Essentials Logo" class="h-16 w-auto mb-4">
-    <h2 class="font-bold text-xl">Leaf Essentials</h2>
+  <!-- Sidebar -->
+  <div id="sidebar" class="fixed left-0 top-0 h-full w-64 bg-neutral-900 dark:bg-neutral-200 shadow-xl transform -translate-x-full transition-transform z-50 flex flex-col">
+    <!-- Logo -->
+    <div class="flex items-center justify-center p-6 border-b border-white/10 dark:border-neutral-400">
+      <img src="logo.png" alt="Leaf Essentials Logo" class="h-12 w-auto"/>
+    </div>
+    
+    <!-- Links -->
+    <nav class="flex-1 px-4 py-6 space-y-4">
+      <a href="https://leafessentials.github.io/guide.html" target="_blank" class="block px-4 py-2 rounded-lg hover:bg-leaf-600/20 dark:hover:bg-leaf-600/30 transition">Leaf Essentials Guidelines</a>
+    </nav>
+
+    <!-- Theme Switcher -->
+    <div class="px-4 py-6 border-t border-white/10 dark:border-neutral-400">
+      <button id="theme-toggle" class="w-full px-4 py-2 bg-leaf-600 hover:bg-leaf-500 rounded-lg font-semibold text-white transition">Switch Theme</button>
+    </div>
   </div>
-  <nav class="flex-1 px-4 py-6 space-y-2">
-    <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 dark:hover:bg-neutral-300" onclick="scrollToSection('guidelines')">Guidelines</button>
-    <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 dark:hover:bg-neutral-300" onclick="scrollToSection('suggestions')">Suggestions</button>
-    <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 dark:hover:bg-neutral-300" onclick="scrollToSection('appeals')">Appeals</button>
-    <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 dark:hover:bg-neutral-300" onclick="scrollToSection('report')">Report Player</button>
-    <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 dark:hover:bg-neutral-300" onclick="scrollToSection('bugreport')">Bug Report</button>
-    <button id="theme-toggle" class="w-full text-left px-3 py-2 rounded-lg hover:bg-white/10 dark:hover:bg-neutral-300 mt-6">Toggle Theme</button>
-  </nav>
-</div>
 
-<!-- Mobile toggle button -->
-<button id="sidebar-toggle" class="fixed top-5 left-5 z-60 p-3 rounded-full bg-leaf-600 hover:bg-leaf-500 shadow-glow text-white md:hidden">
-  ☰
-</button>
+  <!-- Sidebar Toggle Button -->
+  <button id="sidebar-toggle" class="fixed top-5 left-5 z-60 p-3 rounded-full bg-leaf-600 hover:bg-leaf-500 shadow-glow text-white md:hidden">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+  </button>
 
-<!-- Main content -->
-<div class="md:pl-64 transition-all duration-300">
+  <header class="sticky top-0 z-40 backdrop-blur bg-neutral-950/60 border-b border-white/5">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <a href="#top" class="flex items-center gap-3">
+        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-leaf-600 shadow-glow">
+          <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" aria-hidden="true">
+            <path d="M7 21c5.523 0 10-4.477 10-10V3c-5.523 0-10 4.477-10 10v8Z" fill="currentColor" />
+          </svg>
+        </span>
+        <span class="font-extrabold tracking-tight text-lg">Leaf Essentials</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="#features" class="opacity-80 hover:opacity-100">Features</a>
+        <a href="#download" class="opacity-80 hover:opacity-100">Download</a>
+        <a href="#community" class="opacity-80 hover:opacity-100">Community</a>
+        <a href="https://docs.leafessentials.org/" target="_blank" class="opacity-80 hover:opacity-100">Docs</a>
+      </nav>
+      <div class="flex items-center gap-3">
+        <a href="#download" class="px-4 py-2 rounded-xl bg-leaf-600 hover:bg-leaf-500 font-semibold shadow-glow transition">Download</a>
+      </div>
+    </div>
+  </header>
+
   <section id="top" class="relative overflow-hidden">
     <div class="hero-blob absolute inset-0 pointer-events-none"></div>
     <div class="bg-grid absolute inset-0 opacity-[0.07]"></div>
     <div class="max-w-6xl mx-auto px-4 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
       <div>
         <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight">A Bedrock addon that feels <span class="text-leaf-400">essential</span>.</h1>
-        <p class="mt-5 text-neutral-300 text-lg md:text-xl max-w-prose">Custom UIs, events, land claims, leaderboards, reports, and more — built for Minecraft <span class="font-semibold">1.21.90</span>.</p>
+        <p class="mt-5 text-neutral-300 text-lg md:text-xl max-w-prose">Custom UIs, powerful events, land claims, leaderboards, reports, and more — built for Minecraft <span class="font-semibold">1.21.90</span>.</p>
+        <div class="mt-8 flex flex-col sm:flex-row gap-3">
+          <a id="download-btn-top" href="#download" class="px-5 py-3 rounded-xl bg-leaf-600 hover:bg-leaf-500 font-semibold shadow-glow text-center">Download</a>
+          <a href="#community" class="px-5 py-3 rounded-xl border border-white/10 hover:border-white/20 font-semibold text-center">Join Discord</a>
+          <a href="https://docs.leafessentials.org/" target="_blank" rel="noopener" class="px-5 py-3 rounded-xl bg-leaf-500 hover:bg-leaf-400 font-semibold shadow-glow text-center">View Docs</a>
+        </div>
+        <p class="mt-4 text-sm text-neutral-400"><span class="font-semibold">Updated on Augest 12</span> · Updated to support Minecraft <span class="font-semibold">1.21.100+</span></p>
       </div>
       <div class="relative">
         <figure class="rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-          <img src="leaf-essentials-hero.png" alt="Leaf Essentials screenshot" class="w-full h-auto block" />
+          <img src="leaf-essentials-hero.png" alt="Leaf Essentials — Minecraft Bedrock Addon screenshot or banner" class="w-full h-auto block" />
         </figure>
+        <figcaption class="text-xs text-neutral-400 mt-2 px-1"> <code></code> </figcaption>
       </div>
     </div>
   </section>
 
-  <!-- Sections -->
-  <main class="max-w-4xl mx-auto px-4 py-10 space-y-16">
+  <section id="features" class="py-16 md:py-24 border-t border-white/5 bg-neutral-950 dark:bg-neutral-100 dark:text-neutral-900">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Features</h2>
+      <p class="mt-2 text-neutral-400 dark:text-neutral-700">Everything you need for a polished Bedrock server experience.</p>
+      <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 dark:bg-neutral-200 hover:bg-white/[0.07] dark:hover:bg-neutral-300 transition"><div class="text-2xl">🎨</div><h3 class="mt-3 font-bold text-lg">Custom UIs</h3><p class="mt-1 text-neutral-300 dark:text-neutral-900">Clean, modern interfaces that make every interaction feel premium.</p></div>
+        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 dark:bg-neutral-200 hover:bg-white/[0.07] dark:hover:bg-neutral-300 transition"><div class="text-2xl">📃</div><h3 class="mt-3 font-bold text-lg">Customizable Events</h3><p class="mt-1 text-neutral-300 dark:text-neutral-900">Run commands when players kill another player — and more triggers.</p></div>
+        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 dark:bg-neutral-200 hover:bg-white/[0.07] dark:hover:bg-neutral-300 transition"><div class="text-2xl">💼</div><h3 class="mt-3 font-bold text-lg">Chest GUIs</h3><p class="mt-1 text-neutral-300 dark:text-neutral-900">Inventory-style menus your players already understand.</p></div>
+        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 dark:bg-neutral-200 hover:bg-white/[0.07] dark:hover:bg-neutral-300 transition"><div class="text-2xl">💻</div><h3 class="mt-3 font-bold text-lg">Tab UIs</h3><p class="mt-1 text-neutral-300 dark:text-neutral-900">Quick, compact UI for essential actions and stats.</p></div>
+        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 dark:bg-neutral-200 hover:bg-white/[0.07] dark:hover:bg-neutral-300 transition"><div class="text-2xl">🔗</div><h3 class="mt-3 font-bold text-lg">Bind Commands</h3><p class="mt-1 text-neutral-300 dark:text-neutral-900">Attach commands to blocks, items, and entities for powerful interactions.</p></div>
+        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 dark:bg-neutral-200 hover:bg-white/[0.07] dark:hover:bg-neutral-300 transition"><div class="text-2xl">🏝️</div><h3 class="mt-3 font-bold text-lg">Land Claims</h3><p class="mt-1 text-neutral-300 dark:text-neutral-900">Protect builds and empower players to manage their territory.</p></div>
+        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 dark:bg-neutral-200 hover:bg-white/[0.07] dark:hover:bg-neutral-300 transition"><div class="text-2xl">📊</div><h3 class="mt-3 font-bold text-lg">Leaderboards</h3><p class="mt-1 text-neutral-300 dark:text-neutral-900">Show off top players and drive competition.</p></div>
+        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 dark:bg-neutral-200 hover:bg-white/[0.07] dark:hover:bg-neutral-300 transition"><div class="text-2xl">🔨</div><h3 class="mt-3 font-bold text-lg">Reports</h3><p class="mt-1 text-neutral-300 dark:text-neutral-900">Built-in reporting tools to keep your community clean.</p></div>
+        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 dark:bg-neutral-200 hover:bg-white/[0.07] dark:hover:bg-neutral-300 transition"><div class="text-2xl">💬</div><h3 class="mt-3 font-bold text-lg">Good Community</h3><p class="mt-1 text-neutral-300 dark:text-neutral-900">Active support and a friendly Discord server.</p></div>
+        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 dark:bg-neutral-200 hover:bg-white/[0.07] dark:hover:bg-neutral-300 transition sm:col-span-2 lg:col-span-3"><div class="text-2xl">➕</div><h3 class="mt-3 font-bold text-lg">And More!</h3><p class="mt-1 text-neutral-300 dark:text-neutral-900">We ship frequent improvements and new quality-of-life features.</p></div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Guidelines -->
-    <section id="guidelines">
-      <h2 class="text-2xl font-bold mb-4">Server Guidelines</h2>
-      <ul class="list-disc list-inside space-y-2 text-neutral-300 dark:text-neutral-900">
-        <li>Be respectful to all players and staff.</li>
-        <li>No cheating, exploiting, or hacking.</li>
-        <li>Keep chat appropriate and avoid spam.</li>
-        <li>Follow instructions from admins and moderators.</li>
-        <li>Report rule-breaking through the report system.</li>
-      </ul>
-    </section>
+  <section id="download" class="py-16 md:py-24 border-t border-white/5 bg-gradient-to-b from-neutral-950 to-neutral-900 dark:from-neutral-100 dark:to-neutral-200">
+    <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-10 items-center">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Download</h2>
+        <p class="mt-2 text-neutral-300 dark:text-neutral-900">Grab the latest build from our mirror and join the community for updates.</p>
+        <div class="mt-6 flex flex-col sm:flex-row gap-3">
+          <a href="https://modbay.org/download/mirror/2283-0" target="_blank" rel="noopener" class="px-5 py-3 rounded-xl bg-leaf-600 hover:bg-leaf-500 font-semibold shadow-glow text-center">Download on Curseforge</a>
+          <a href="https://discord.com/invite/MpfavdRTGc" target="_blank" rel="noopener" class="px-5 py-3 rounded-xl border border-white/10 hover:border-white/20 font-semibold text-center">Join Discord</a>
+          <a href="https://docs.leafessentials.org/" target="_blank" rel="noopener" class="px-5 py-3 rounded-xl bg-leaf-500 hover:bg-leaf-400 font-semibold shadow-glow text-center">View Docs</a>
+        </div>
+        <p class="mt-4 text-xs text-neutral-400 dark:text-neutral-700">The Curseforgelink above is the download mirror provided.</p>
+      </div>
+      <div class="p-6 rounded-2xl border border-white/10 bg-white/5 dark:bg-neutral-200">
+        <h3 class="font-bold">What you get</h3>
+        <ul class="mt-3 space-y-2 text-neutral-300 dark:text-neutral-900 list-disc list-inside">
+          <li>Minecraft Bedrock Edition addon files</li>
+          <li>Documentation and usage tips inside the pack (when available)</li>
+          <li>Active support via Discord</li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
-    <!-- Suggestions -->
-    <section id="suggestions">
-      <h2 class="text-2xl font-bold mb-4">Suggestions</h2>
-      <form id="suggestionForm" class="space-y-4">
-        <input type="text" name="username" placeholder="Your Minecraft Name" required class="w-full p-2 rounded-lg bg-neutral-900 dark:bg-neutral-200 text-white dark:text-black border border-white/10 dark:border-neutral-400">
-        <textarea name="suggestion" placeholder="Your suggestion..." required class="w-full p-2 rounded-lg bg-neutral-900 dark:bg-neutral-200 text-white dark:text-black border border-white/10 dark:border-neutral-400 h-24"></textarea>
-        <button type="submit" class="px-4 py-2 rounded-lg bg-leaf-600 hover:bg-leaf-500 font-semibold text-white">Send Suggestion</button>
-      </form>
-      <p id="suggestionStatus" class="mt-2 text-sm"></p>
-    </section>
+  <section id="community" class="py-16 md:py-24 border-t border-white/5 bg-neutral-950 dark:bg-neutral-100 dark:text-neutral-900">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Join the community</h2>
+          <p class="mt-2 text-neutral-300 dark:text-neutral-900">Hop into our Discord to get help, share feedback, and see what's next.</p>
+          <a href="https://discord.com/invite/MpfavdRTGc" target="_blank" rel="noopener" class="inline-flex items-center gap-2 mt-6 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 font-semibold dark:text-neutral-900 dark:bg-neutral-200 dark:hover:bg-neutral-300">Join our Discord</a>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 dark:bg-neutral-200">
+          <h3 class="font-bold">News</h3>
+          <ul class="mt-3 space-y-2 text-neutral-300 dark:text-neutral-900"><li><span class="font-semibold">Augest 12:</span> Updated to support Minecraft 1.21.100+.</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <!-- Appeals -->
-    <section id="appeals">
-      <h2 class="text-2xl font-bold mb-4">Appeals</h2>
-      <form id="appealForm" class="space-y-4">
-        <input type="text" name="username" placeholder="Your Minecraft Name" required class="w-full p-2 rounded-lg bg-neutral-900 dark:bg-neutral-200 text-white dark:text-black border border-white/10 dark:border-neutral-400">
-        <textarea name="appeal" placeholder="Your appeal..." required class="w-full p-2 rounded-lg bg-neutral-900 dark:bg-neutral-200 text-white dark:text-black border border-white/10 dark:border-neutral-400 h-24"></textarea>
-        <button type="submit" class="px-4 py-2 rounded-lg bg-leaf-600 hover:bg-leaf-500 font-semibold text-white">Submit Appeal</button>
-      </form>
-      <p id="appealStatus" class="mt-2 text-sm"></p>
-    </section>
-
-    <!-- Report -->
-    <section id="report">
-      <h2 class="text-2xl font-bold mb-4">Report Player</h2>
-      <form id="reportForm" class="space-y-4">
-        <input type="text" name="username" placeholder="Your Minecraft Name" required class="w-full p-2 rounded-lg bg-neutral-900 dark:bg-neutral-200 text-white dark:text-black border border-white/10 dark:border-neutral-400">
-        <input type="text" name="reportedPlayer" placeholder="Player to report" required class="w-full p-2 rounded-lg bg-neutral-900 dark:bg-neutral-200 text-white dark:text-black border border-white/10 dark:border-neutral-400">
-        <textarea name="reason" placeholder="Reason..." required class="w-full p-2 rounded-lg bg-neutral-900 dark:bg-neutral-200 text-white dark:text-black border border-white/10 dark:border-neutral-400 h-24"></textarea>
-        <button type="submit" class="px-4 py-2 rounded-lg bg-leaf-600 hover:bg-leaf-500 font-semibold text-white">Send Report</button>
-      </form>
-      <p id="reportStatus" class="mt-2 text-sm"></p>
-    </section>
-
-    <!-- Bug Report -->
-    <section id="bugreport">
-      <h2 class="text-2xl font-bold mb-4">Bug Report</h2>
-      <form id="bugForm" class="space-y-4">
-        <input type="text" name="username" placeholder="Your Minecraft Name" required class="w-full p-2 rounded-lg bg-neutral-900 dark:bg-neutral-200 text-white dark:text-black border border-white/10 dark:border-neutral-400">
-        <textarea name="bug" placeholder="Describe the bug..." required class="w-full p-2 rounded-lg bg-neutral-900 dark:bg-neutral-200 text-white dark:text-black border border-white/10 dark:border-neutral-400 h-24"></textarea>
-        <button type="submit" class="px-4 py-2 rounded-lg bg-leaf-600 hover:bg-leaf-500 font-semibold text-white">Submit Bug Report</button>
-      </form>
-      <p id="bugStatus" class="mt-2 text-sm"></p>
-    </section>
-
-  </main>
-
-  <footer class="border-t border-white/5 text-center py-6 text-neutral-400 dark:text-neutral-700">
-    © <span id="year"></span> Leaf Essentials. Not affiliated with Mojang or Microsoft.
+  <footer class="border-t border-white/5 dark:border-neutral-400">
+    <div class="max-w-6xl mx-auto px-4 py-10 text-sm text-neutral-400 dark:text-neutral-700 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p>© <span id="year"></span> Leaf Essentials. Not affiliated with Mojang or Microsoft.</p>
+      <div class="flex items-center gap-4">
+        <a href="#top" class="hover:text-neutral-200 dark:hover:text-neutral-900">Back to top</a>
+        <a href="https://www.curseforge.com/minecraft-bedrock/scripts/leaf/download" class="hover:text-neutral-200 dark:hover:text-neutral-900" target="_blank">Curseforge</a>
+        <a href="https://discord.com/invite/MpfavdRTGc" class="hover:text-neutral-200 dark:hover:text-neutral-900" target="_blank">Discord</a>
+        <a href="https://docs.leafessentials.org/" class="hover:text-neutral-200 dark:hover:text-neutral-900" target="_blank">Docs</a>
+      </div>
+    </div>
   </footer>
 
-  <!-- Scripts -->
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+    document.querySelectorAll('a[href^="#"]').forEach(a => { 
+      a.addEventListener('click', e => {
+        const id = a.getAttribute('href').slice(1); 
+        const el = document.getElementById(id);
+        if (el) { e.preventDefault(); el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+      }); 
+    });
 
     // Sidebar toggle
     const sidebar = document.getElementById('sidebar');
-    const toggleBtn = document.getElementById('sidebar-toggle');
-    toggleBtn.addEventListener('click', ()=>sidebar.classList.toggle('-translate-x-full'));
+    const sidebarToggle = document.getElementById('sidebar-toggle');
+    sidebarToggle.addEventListener('click', () => {
+      sidebar.classList.toggle('-translate-x-full');
+    });
 
-    // Scroll to sections
-    function scrollToSection(id){
-      const el = document.getElementById(id);
-      if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    // Theme switcher
+    const themeToggle = document.getElementById('theme-toggle');
+    themeToggle.addEventListener('click', () => {
+      if(document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+    // Load theme from localStorage
+    if(localStorage.getItem('theme') === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
-
-    // Theme toggle
-    const themeBtn = document.getElementById('theme-toggle');
-    themeBtn.addEventListener('click', ()=>{
-      document.documentElement.classList.toggle('dark');
-    });
-
-    // Discord webhooks
-    const SUGGESTION_WEBHOOK = "https://discord.com/api/webhooks/1411772351573524602/q3h_liO7CNZyJbEItUZGvSzSxovvXWL0Ih22T8YuWSB8D77RIGuACXvKDyDOz8FnGXcE";
-    const APPEAL_WEBHOOK = "https://discord.com/api/webhooks/1411772802905935902/zG4nB8HOG5XcwLeChw0WB8E896SoSB-Rih_3Dv9n3hZjdLIu-ALs9TCYy8gRtC5QHAzm";
-    const REPORT_WEBHOOK = "https://discord.com/api/webhooks/1411773293882511451/I7a3jFnqjaHfs0m4K8-ZXV6DUDzOlqm72UcqUXnrFdPiBunyGG_Q43q9zndgMSBKVmzc";
-    const BUG_WEBHOOK = "https://discord.com/api/webhooks/1411773572891938867/M8EyZvttSuHQtBgCFZoR4uwJeQL9BuFZxYkmRPuTQuRnhpdC8aQmPD9MxEVtMe8GX9Pk";
-
-    function sendDiscord(webhook, content, statusEl){
-      fetch(webhook, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({content})})
-        .then(r=>statusEl.textContent=r.ok?'Sent!':'Failed').catch(()=>statusEl.textContent='Failed');
-      statusEl.className='mt-2 text-green-500';
-    }
-
-    // Forms
-    document.getElementById('suggestionForm').addEventListener('submit', e=>{
-      e.preventDefault(); 
-      const f=e.target;
-      sendDiscord(SUGGESTION_WEBHOOK, `**${f.username.value}** suggestion:\n${f.suggestion.value}`, document.getElementById('suggestionStatus'));
-      f.reset();
-    });
-    document.getElementById('appealForm').addEventListener('submit', e=>{
-      e.preventDefault(); 
-      const f=e.target;
-      sendDiscord(APPEAL_WEBHOOK, `**${f.username.value}** appeal:\n${f.appeal.value}`, document.getElementById('appealStatus'));
-      f.reset();
-    });
-    document.getElementById('reportForm').addEventListener('submit', e=>{
-      e.preventDefault(); 
-      const f=e.target;
-      sendDiscord(REPORT_WEBHOOK, `**${f.username.value}** reports **${f.reportedPlayer.value}**:\n${f.reason.value}`, document.getElementById('reportStatus'));
-      f.reset();
-    });
-    document.getElementById('bugForm').addEventListener('submit', e=>{
-      e.preventDefault(); 
-      const f=e.target;
-      sendDiscord(BUG_WEBHOOK, `**${f.username.value}** bug report:\n${f.bug.value}`, document.getElementById('bugStatus'));
-      f.reset();
-    });
   </script>
+
 </body>
 </html>
