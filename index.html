@@ -1,182 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Leaf Essentials — Minecraft Bedrock Addon</title>
-  <meta name="description" content="Leaf Essentials is a feature-rich Minecraft Bedrock Edition addon: custom UIs, events, chest GUIs, tab UIs, bindable commands, land claims, leaderboards, reports, and more. Updated for Minecraft 1.21.90." />
-  <meta name="theme-color" content="#16a34a" />
-  <!-- Open Graph / Twitter -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Leaf Essentials — Minecraft Bedrock Addon" />
-  <meta property="og:description" content="Custom UIs, events, chest & tab GUIs, land claims, leaderboards, reports, and more. Updated for Minecraft 1.21.90." />
-  <meta property="og:image" content="leaf-essentials-hero.png" />
-  <meta name="twitter:card" content="summary_large_image" />
-
-  <!-- Tailwind (CDN) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    .bg-grid {
-      background-image: linear-gradient(to right, rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.06) 1px, transparent 1px);
-      background-size: 40px 40px;
-    }
-    .hero-blob {
-      background: radial-gradient(1200px 600px at 10% 10%, rgba(34,197,94,.15), transparent 60%),
-                  radial-gradient(800px 400px at 90% 20%, rgba(16,185,129,.15), transparent 50%),
-                  radial-gradient(600px 600px at 50% 100%, rgba(59,130,246,.12), transparent 50%);
-      filter: saturate(1.05);
-    }
-
-    /* Ugly admin panel styles */
-    #admin-section {
-      display: none;
-      font-family: "Comic Sans MS", cursive, sans-serif;
-      background: repeating-linear-gradient(45deg, lime, lime 20px, magenta 20px, magenta 40px);
-      color: yellow;
-      padding: 20px;
-      text-align: center;
-    }
-    #admin-section input, #admin-section button {
-      font-family: "Comic Sans MS", cursive, sans-serif;
-      background: red;
-      color: lime;
-      border: 3px dashed yellow;
-      padding: 5px;
-      margin: 5px;
-    }
-    #admin-panel {
-      display: none;
-      background: black;
-      color: cyan;
-      padding: 20px;
-      border: 5px solid hotpink;
-    }
-    #admin-panel table {
-      width: 100%;
-      border: 3px solid lime;
-      background: purple;
-      color: white;
-    }
-    #admin-panel td, #admin-panel th {
-      border: 2px solid yellow;
-      padding: 4px;
-    }
-    .blink {
-      animation: blink 1s infinite;
-    }
-    @keyframes blink { 50% { opacity: 0; } }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCBEHub - Home</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-neutral-950 text-neutral-100 font-display selection:bg-leaf-500/30 selection:text-white">
+<body class="bg-gray-900 text-white font-sans">
   <!-- Header -->
-  <header class="sticky top-0 z-40 backdrop-blur bg-neutral-950/60 border-b border-white/5">
-    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a href="#top" class="flex items-center gap-3">
-        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-leaf-600">
-          <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" aria-hidden="true">
-            <path d="M7 21c5.523 0 10-4.477 10-10V3c-5.523 0-10 4.477-10 10v8Z" fill="currentColor" />
-          </svg>
-        </span>
-        <span class="font-extrabold tracking-tight text-lg">Leaf Essentials</span>
-      </a>
-      <nav class="hidden md:flex items-center gap-6 text-sm">
-        <a href="#features">Features</a>
-        <a href="#download">Download</a>
-        <a href="#community">Community</a>
+  <header class="bg-gray-800 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+      <h1 class="text-2xl font-bold text-green-400">MCBEHub</h1>
+      <nav class="space-x-6">
+        <a href="#" class="hover:text-green-400">Home</a>
+        <a href="https://mcbetools.com/" class="hover:text-green-400">MCBE Tools</a>
+        <a href="#features" class="hover:text-green-400">Features</a>
+        <a href="#community" class="hover:text-green-400">Community</a>
+        <a href="#contact" class="hover:text-green-400">Contact</a>
       </nav>
-      <div class="flex items-center gap-3">
-        <a href="#download" class="px-4 py-2 rounded-xl bg-leaf-600 hover:bg-leaf-500 font-semibold transition">Download</a>
-      </div>
     </div>
   </header>
 
-  <!-- Hero -->
-  <section id="top" class="relative overflow-hidden">
-    <div class="hero-blob absolute inset-0 pointer-events-none"></div>
-    <div class="bg-grid absolute inset-0 opacity-[0.07]"></div>
+  <!-- Hero Section -->
+  <section class="text-center py-20 bg-gradient-to-r from-green-500 to-blue-600">
+    <h2 class="text-4xl md:text-5xl font-extrabold mb-6">Welcome to MCBEHub</h2>
+    <p class="max-w-2xl mx-auto text-lg mb-8">Your central hub for Minecraft Bedrock Edition tools, addons, and resources. Explore everything you need to enhance your Minecraft experience.</p>
+    <a href="https://mcbetools.com/" class="bg-white text-gray-900 px-6 py-3 rounded-full font-semibold hover:bg-gray-200 transition">Visit MCBE Tools</a>
+  </section>
 
-    <div class="max-w-6xl mx-auto px-4 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
-      <div>
-        <h1 class="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight">
-          A Bedrock addon that feels <span class="text-leaf-400">essential</span>.
-        </h1>
-        <p class="mt-5 text-neutral-300 text-lg md:text-xl max-w-prose">
-          Custom UIs, powerful events, land claims, leaderboards, reports, and more — built for Minecraft <span class="font-semibold">1.21.90</span>.
-        </p>
-        <p class="mt-4 text-sm text-neutral-400">
-          <span class="font-semibold">Updated on July 03</span> · Updated to support Minecraft <span class="font-semibold">1.21.90</span>
-        </p>
+  <!-- Features -->
+  <section id="features" class="py-16 max-w-7xl mx-auto px-6">
+    <h3 class="text-3xl font-bold text-center mb-12">Why Choose MCBEHub?</h3>
+    <div class="grid md:grid-cols-3 gap-10">
+      <div class="bg-gray-800 p-6 rounded-xl shadow-lg text-center">
+        <h4 class="text-xl font-semibold mb-4 text-green-400">Addons & Tools</h4>
+        <p>Discover powerful addons, scripts, and utilities designed to improve your Minecraft Bedrock gameplay.</p>
       </div>
-      <div class="relative">
-        <figure class="rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-          <img src="leaf-essentials-hero.png" alt="Leaf Essentials — Minecraft Bedrock Addon" class="w-full h-auto block" />
-        </figure>
+      <div class="bg-gray-800 p-6 rounded-xl shadow-lg text-center">
+        <h4 class="text-xl font-semibold mb-4 text-green-400">Community</h4>
+        <p>Join a growing community of Minecraft players and creators who share resources, tips, and projects.</p>
+      </div>
+      <div class="bg-gray-800 p-6 rounded-xl shadow-lg text-center">
+        <h4 class="text-xl font-semibold mb-4 text-green-400">Guides & Tutorials</h4>
+        <p>Access tutorials, documentation, and guides to help you get the most out of your Minecraft Bedrock Edition.</p>
       </div>
     </div>
   </section>
 
-  <!-- Features / Download / Community sections remain unchanged -->
+  <!-- Community Section -->
+  <section id="community" class="py-16 bg-gray-800 text-center">
+    <h3 class="text-3xl font-bold mb-6">Be Part of the Community</h3>
+    <p class="max-w-2xl mx-auto mb-8">Connect with creators, players, and developers. Share your creations, discover new content, and collaborate on exciting projects.</p>
+    <a href="#" class="bg-green-500 px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition">Join Now</a>
+  </section>
 
-  <!-- Secret Admin Panel -->
-  <!-- Change the section to start hidden but togglable -->
-<section id="admin-section" style="display:none;">
-  <h2 class="blink">🚨 UGLY ADMIN LOGIN 🚨</h2>
-  <p>Enter your terrible credentials to proceed.</p>
-  <input type="text" id="admin-user" placeholder="Username">
-  <input type="password" id="admin-pass" placeholder="Password">
-  <button onclick="loginAdmin()">LOGIN</button>
-
-  <div id="admin-panel" style="display:none;">
-    <h2 class="blink">WELCOME TO THE WORST ADMIN PANEL EVER</h2>
-    <button onclick="alert('Player Banned!')">Ban Player</button>
-    <button onclick="alert('Server Deleted!')">Delete Server</button>
-    <button onclick="alert('999 TNT Spawned!')">Spawn 999 TNT</button>
-    <marquee behavior="scroll" direction="left">🔥 WARNING: THIS PANEL IS UGLY 🔥</marquee>
-    <table>
-      <tr><th>Server Stat</th><th>Value</th></tr>
-      <tr><td>Players Online</td><td>420</td></tr>
-      <tr><td>TPS</td><td>3</td></tr>
-      <tr><td>Lag</td><td>MAX</td></tr>
-    </table>
-  </div>
-</section>
+  <!-- Contact Section -->
+  <section id="contact" class="py-16 max-w-4xl mx-auto px-6 text-center">
+    <h3 class="text-3xl font-bold mb-6">Get in Touch</h3>
+    <p class="mb-8">Have questions or want to collaborate? Reach out to us anytime!</p>
+    <form class="grid gap-4">
+      <input type="text" placeholder="Your Name" class="p-3 rounded-lg text-black" required>
+      <input type="email" placeholder="Your Email" class="p-3 rounded-lg text-black" required>
+      <textarea placeholder="Your Message" class="p-3 rounded-lg text-black" rows="4" required></textarea>
+      <button type="submit" class="bg-green-500 px-6 py-3 rounded-full font-semibold hover:bg-green-600 transition">Send Message</button>
+    </form>
+  </section>
 
   <!-- Footer -->
-  <footer class="border-t border-white/5">
-    <div class="max-w-6xl mx-auto px-4 py-10 text-sm text-neutral-400 flex flex-col md:flex-row items-center justify-between gap-4">
-      <p>© <span id="year"></span> Leaf Essentials. Not affiliated with Mojang or Microsoft.</p>
-      <div class="flex items-center gap-4">
-        <a href="#top">Back to top</a>
-        <a href="https://modbay.org/download/mirror/2283-0" target="_blank">ModBay</a>
-        <a href="https://discord.com/invite/MpfavdRTGc" target="_blank">Discord</a>
-        <a href="#admin-section">Admin</a>
-      </div>
-    </div>
+  <footer class="bg-gray-900 border-t border-gray-700 py-6 text-center">
+    <p class="text-gray-400">&copy; 2025 MCBEHub. Connected with <a href="https://mcbetools.com/" class="text-green-400 hover:underline">MCBE Tools</a>.</p>
   </footer>
-
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    function loginAdmin() {
-  const user = document.getElementById('admin-user').value;
-  const pass = document.getElementById('admin-pass').value;
-  if (user && pass) {
-    document.getElementById('admin-panel').style.display = 'block';
-    alert('Welcome, ' + user + '! Enjoy this hideous panel.');
-  } else {
-    alert('Wrong credentials! (not really, but still)');
-  }
-}
-
-// Reveal admin section when clicking footer link
-document.querySelector('a[href="#admin-section"]').addEventListener('click', e => {
-  e.preventDefault();
-  document.getElementById('admin-section').style.display = 'block';
-  document.getElementById('admin-section').scrollIntoView({ behavior: 'smooth' });
-});
-  </script>
 </body>
 </html>
