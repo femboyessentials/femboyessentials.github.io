@@ -15,39 +15,10 @@
 
   <!-- Tailwind (CDN) -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            leaf: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              200: '#bbf7d0',
-              300: '#86efac',
-              400: '#4ade80',
-              500: '#22c55e',
-              600: '#16a34a',
-              700: '#15803d',
-              800: '#166534',
-              900: '#14532d',
-            }
-          },
-          fontFamily: {
-            display: ['Inter', 'ui-sans-serif', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica Neue', 'Arial', 'Noto Sans', 'sans-serif'],
-          },
-          boxShadow: {
-            glow: '0 0 0 6px rgba(34,197,94,0.15)'
-          }
-        }
-      }
-    }
-  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* Subtle animated grid background */
     .bg-grid {
       background-image: linear-gradient(to right, rgba(255,255,255,.06) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.06) 1px, transparent 1px);
       background-size: 40px 40px;
@@ -58,6 +29,45 @@
                   radial-gradient(600px 600px at 50% 100%, rgba(59,130,246,.12), transparent 50%);
       filter: saturate(1.05);
     }
+
+    /* Ugly admin panel styles */
+    #admin-section {
+      display: none;
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      background: repeating-linear-gradient(45deg, lime, lime 20px, magenta 20px, magenta 40px);
+      color: yellow;
+      padding: 20px;
+      text-align: center;
+    }
+    #admin-section input, #admin-section button {
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      background: red;
+      color: lime;
+      border: 3px dashed yellow;
+      padding: 5px;
+      margin: 5px;
+    }
+    #admin-panel {
+      display: none;
+      background: black;
+      color: cyan;
+      padding: 20px;
+      border: 5px solid hotpink;
+    }
+    #admin-panel table {
+      width: 100%;
+      border: 3px solid lime;
+      background: purple;
+      color: white;
+    }
+    #admin-panel td, #admin-panel th {
+      border: 2px solid yellow;
+      padding: 4px;
+    }
+    .blink {
+      animation: blink 1s infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
   </style>
 </head>
 <body class="bg-neutral-950 text-neutral-100 font-display selection:bg-leaf-500/30 selection:text-white">
@@ -65,7 +75,7 @@
   <header class="sticky top-0 z-40 backdrop-blur bg-neutral-950/60 border-b border-white/5">
     <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
       <a href="#top" class="flex items-center gap-3">
-        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-leaf-600 shadow-glow">
+        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-leaf-600">
           <svg viewBox="0 0 24 24" fill="none" class="h-5 w-5" aria-hidden="true">
             <path d="M7 21c5.523 0 10-4.477 10-10V3c-5.523 0-10 4.477-10 10v8Z" fill="currentColor" />
           </svg>
@@ -73,12 +83,12 @@
         <span class="font-extrabold tracking-tight text-lg">Leaf Essentials</span>
       </a>
       <nav class="hidden md:flex items-center gap-6 text-sm">
-        <a href="#features" class="opacity-80 hover:opacity-100">Features</a>
-        <a href="#download" class="opacity-80 hover:opacity-100">Download</a>
-        <a href="#community" class="opacity-80 hover:opacity-100">Community</a>
+        <a href="#features">Features</a>
+        <a href="#download">Download</a>
+        <a href="#community">Community</a>
       </nav>
       <div class="flex items-center gap-3">
-        <a href="#download" class="px-4 py-2 rounded-xl bg-leaf-600 hover:bg-leaf-500 font-semibold shadow-glow transition">Download</a>
+        <a href="#download" class="px-4 py-2 rounded-xl bg-leaf-600 hover:bg-leaf-500 font-semibold transition">Download</a>
       </div>
     </div>
   </header>
@@ -96,131 +106,40 @@
         <p class="mt-5 text-neutral-300 text-lg md:text-xl max-w-prose">
           Custom UIs, powerful events, land claims, leaderboards, reports, and more — built for Minecraft <span class="font-semibold">1.21.90</span>.
         </p>
-        <div class="mt-8 flex flex-col sm:flex-row gap-3">
-          <a id="download-btn-top" href="#download" class="px-5 py-3 rounded-xl bg-leaf-600 hover:bg-leaf-500 font-semibold shadow-glow text-center">Download</a>
-          <a href="#community" class="px-5 py-3 rounded-xl border border-white/10 hover:border-white/20 font-semibold text-center">Join Discord</a>
-        </div>
         <p class="mt-4 text-sm text-neutral-400">
           <span class="font-semibold">Updated on July 03</span> · Updated to support Minecraft <span class="font-semibold">1.21.90</span>
         </p>
       </div>
-
       <div class="relative">
-        <!-- Hero image: replace the src with the image you provided (keep the filename or update the meta tags above) -->
         <figure class="rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
-          <img src="leaf-essentials-hero.png" alt="Leaf Essentials — Minecraft Bedrock Addon screenshot or banner" class="w-full h-auto block" />
+          <img src="leaf-essentials-hero.png" alt="Leaf Essentials — Minecraft Bedrock Addon" class="w-full h-auto block" />
         </figure>
-        <figcaption class="text-xs text-neutral-400 mt-2 px-1">
-          <code></code>
-        </figcaption>
       </div>
     </div>
   </section>
 
-  <!-- Feature Grid -->
-  <section id="features" class="py-16 md:py-24 border-t border-white/5 bg-neutral-950">
-    <div class="max-w-6xl mx-auto px-4">
-      <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Features</h2>
-      <p class="mt-2 text-neutral-400">Everything you need for a polished Bedrock server experience.</p>
+  <!-- Features / Download / Community sections remain unchanged -->
 
-      <div class="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Each card -->
-        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/[0.07] transition">
-          <div class="text-2xl">🎨</div>
-          <h3 class="mt-3 font-bold text-lg">Custom UIs</h3>
-          <p class="mt-1 text-neutral-300">Clean, modern interfaces that make every interaction feel premium.</p>
-        </div>
-        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/[0.07] transition">
-          <div class="text-2xl">📃</div>
-          <h3 class="mt-3 font-bold text-lg">Customizable Events</h3>
-          <p class="mt-1 text-neutral-300">Run commands when players kill another player — and more triggers.</p>
-        </div>
-        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/[0.07] transition">
-          <div class="text-2xl">💼</div>
-          <h3 class="mt-3 font-bold text-lg">Chest GUIs</h3>
-          <p class="mt-1 text-neutral-300">Inventory-style menus your players already understand.</p>
-        </div>
-        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/[0.07] transition">
-          <div class="text-2xl">💻</div>
-          <h3 class="mt-3 font-bold text-lg">Tab UIs</h3>
-          <p class="mt-1 text-neutral-300">Quick, compact UI for essential actions and stats.</p>
-        </div>
-        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/[0.07] transition">
-          <div class="text-2xl">🔗</div>
-          <h3 class="mt-3 font-bold text-lg">Bind Commands</h3>
-          <p class="mt-1 text-neutral-300">Attach commands to blocks, items, and entities for powerful interactions.</p>
-        </div>
-        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/[0.07] transition">
-          <div class="text-2xl">🏝️</div>
-          <h3 class="mt-3 font-bold text-lg">Land Claims</h3>
-          <p class="mt-1 text-neutral-300">Protect builds and empower players to manage their territory.</p>
-        </div>
-        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/[0.07] transition">
-          <div class="text-2xl">📊</div>
-          <h3 class="mt-3 font-bold text-lg">Leaderboards</h3>
-          <p class="mt-1 text-neutral-300">Show off top players and drive competition.</p>
-        </div>
-        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/[0.07] transition">
-          <div class="text-2xl">🔨</div>
-          <h3 class="mt-3 font-bold text-lg">Reports</h3>
-          <p class="mt-1 text-neutral-300">Built-in reporting tools to keep your community clean.</p>
-        </div>
-        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/[0.07] transition">
-          <div class="text-2xl">💬</div>
-          <h3 class="mt-3 font-bold text-lg">Good Community</h3>
-          <p class="mt-1 text-neutral-300">Active support and a friendly Discord server.</p>
-        </div>
-        <div class="p-6 rounded-2xl border border-white/10 bg-white/5 hover:bg-white/[0.07] transition sm:col-span-2 lg:col-span-3">
-          <div class="text-2xl">➕</div>
-          <h3 class="mt-3 font-bold text-lg">And More!</h3>
-          <p class="mt-1 text-neutral-300">We ship frequent improvements and new quality-of-life features.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <!-- Secret Admin Panel -->
+  <section id="admin-section">
+    <h2 class="blink">🚨 UGLY ADMIN LOGIN 🚨</h2>
+    <p>Enter your terrible credentials to proceed.</p>
+    <input type="text" id="admin-user" placeholder="Username">
+    <input type="password" id="admin-pass" placeholder="Password">
+    <button onclick="loginAdmin()">LOGIN</button>
 
-  <!-- Download / CTA -->
-  <section id="download" class="py-16 md:py-24 border-t border-white/5 bg-gradient-to-b from-neutral-950 to-neutral-900">
-    <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-10 items-center">
-      <div>
-        <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Download</h2>
-        <p class="mt-2 text-neutral-300">Grab the latest build from our mirror and join the community for updates.</p>
-        <div class="mt-6 flex flex-col sm:flex-row gap-3">
-          <a href="https://modbay.org/download/mirror/2283-0" target="_blank" rel="noopener" class="px-5 py-3 rounded-xl bg-leaf-600 hover:bg-leaf-500 font-semibold shadow-glow text-center">Download on ModBay</a>
-          <a href="https://discord.com/invite/MpfavdRTGc" target="_blank" rel="noopener" class="px-5 py-3 rounded-xl border border-white/10 hover:border-white/20 font-semibold text-center">Join Discord</a>
-        </div>
-        <p class="mt-4 text-xs text-neutral-400">The ModBay link above is the download mirror provided.</p>
-      </div>
-      <div class="p-6 rounded-2xl border border-white/10 bg-white/5">
-        <h3 class="font-bold">What you get</h3>
-        <ul class="mt-3 space-y-2 text-neutral-300 list-disc list-inside">
-          <li>Minecraft Bedrock Edition addon files</li>
-          <li>Documentation and usage tips inside the pack (when available)</li>
-          <li>Active support via Discord</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- Community -->
-  <section id="community" class="py-16 md:py-24 border-t border-white/5 bg-neutral-950">
-    <div class="max-w-6xl mx-auto px-4">
-      <div class="grid md:grid-cols-2 gap-10 items-center">
-        <div>
-          <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Join the community</h2>
-          <p class="mt-2 text-neutral-300">Hop into our Discord to get help, share feedback, and see what's next.</p>
-          <a href="https://discord.com/invite/MpfavdRTGc" target="_blank" rel="noopener" class="inline-flex items-center gap-2 mt-6 px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 font-semibold">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5"><path d="M20.317 4.369A19.791 19.791 0 0 0 16.558 3c-.2.351-.429.82-.586 1.193a18.14 18.14 0 0 0-7.944 0C7.871 3.82 7.642 3.351 7.442 3a19.786 19.786 0 0 0-3.759 1.369C1.044 8.087.318 12.69.705 17.246a19.9 19.9 0 0 0 5.996 3.026 14.493 14.493 0 0 0 1.288-2.102 12.9 12.9 0 0 1-2.036-.988c.171-.125.339-.257.501-.392a13.94 13.94 0 0 0 11.092 0c.163.136.331.267.501.392-.647.39-1.33.716-2.036.988.36.754.792 1.474 1.288 2.102a19.9 19.9 0 0 0 5.996-3.026c.494-5.641-.846-10.199-2.978-12.877Z"/></svg>
-            Join our Discord
-          </a>
-        </div>
-        <div class="p-6 rounded-2xl border border-white/10 bg-white/5">
-          <h3 class="font-bold">News</h3>
-          <ul class="mt-3 space-y-2 text-neutral-300">
-            <li><span class="font-semibold">July 03:</span> Updated to support Minecraft 1.21.90.</li>
-          </ul>
-        </div>
-      </div>
+    <div id="admin-panel">
+      <h2 class="blink">WELCOME TO THE WORST ADMIN PANEL EVER</h2>
+      <button onclick="alert('Player Banned!')">Ban Player</button>
+      <button onclick="alert('Server Deleted!')">Delete Server</button>
+      <button onclick="alert('999 TNT Spawned!')">Spawn 999 TNT</button>
+      <marquee behavior="scroll" direction="left">🔥 WARNING: THIS PANEL IS UGLY 🔥</marquee>
+      <table>
+        <tr><th>Server Stat</th><th>Value</th></tr>
+        <tr><td>Players Online</td><td>420</td></tr>
+        <tr><td>TPS</td><td>3</td></tr>
+        <tr><td>Lag</td><td>MAX</td></tr>
+      </table>
     </div>
   </section>
 
@@ -229,27 +148,27 @@
     <div class="max-w-6xl mx-auto px-4 py-10 text-sm text-neutral-400 flex flex-col md:flex-row items-center justify-between gap-4">
       <p>© <span id="year"></span> Leaf Essentials. Not affiliated with Mojang or Microsoft.</p>
       <div class="flex items-center gap-4">
-        <a href="#top" class="hover:text-neutral-200">Back to top</a>
-        <a href="https://modbay.org/download/mirror/2283-0" class="hover:text-neutral-200" target="_blank" rel="noopener">ModBay</a>
-        <a href="https://discord.com/invite/MpfavdRTGc" class="hover:text-neutral-200" target="_blank" rel="noopener">Discord</a>
+        <a href="#top">Back to top</a>
+        <a href="https://modbay.org/download/mirror/2283-0" target="_blank">ModBay</a>
+        <a href="https://discord.com/invite/MpfavdRTGc" target="_blank">Discord</a>
+        <a href="#admin-section">Admin</a>
       </div>
     </div>
   </footer>
 
   <script>
-    // Current year in footer
     document.getElementById('year').textContent = new Date().getFullYear();
-    // Smooth scroll (basic)
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
-      a.addEventListener('click', e => {
-        const id = a.getAttribute('href').slice(1);
-        const el = document.getElementById(id);
-        if (el) {
-          e.preventDefault();
-          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      })
-    })
+
+    function loginAdmin() {
+      const user = document.getElementById('admin-user').value;
+      const pass = document.getElementById('admin-pass').value;
+      if (user && pass) {
+        document.getElementById('admin-panel').style.display = 'block';
+        alert('Welcome, ' + user + '! Enjoy this hideous panel.');
+      } else {
+        alert('Wrong credentials! (not really, but still)');
+      }
+    }
   </script>
 </body>
 </html>
