@@ -3,113 +3,119 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Femboy Essentials Docs | Development</title>
+  <title>Femboy Essentials Docs</title>
+  <link rel="icon" href="favicon.ico" />
   <style>
     :root {
       --bg: #1a1a2e;
+      --sidebar: #27293d;
       --card: #222437;
       --text: #e6e6fa;
       --accent: #ff77e9;
       --accent-light: #ffbdf7;
     }
-
     body.light {
-      --bg: #f9f9fb;
+      --bg: #fdfdff;
+      --sidebar: #f2f2f7;
       --card: #ffffff;
       --text: #1a1a2e;
-      --accent: #e260d4;
-      --accent-light: #ff77e9;
+      --accent: #ff77e9;
+      --accent-light: #ff4fd0;
     }
-
     body {
       margin: 0;
       font-family: "Segoe UI", sans-serif;
       background: var(--bg);
       color: var(--text);
-      transition: all 0.3s ease;
       display: flex;
+      height: 100vh;
     }
-
-    header {
-      background: var(--card);
+    /* Sidebar */
+    #sidebar {
+      width: 250px;
+      background: var(--sidebar);
+      border-right: 2px solid var(--accent);
       padding: 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 2px solid var(--accent);
+      box-sizing: border-box;
+      transition: transform 0.3s;
+    }
+    #sidebar.hidden {
+      transform: translateX(-100%);
+    }
+    #sidebar h1 {
+      font-size: 1.2rem;
+      color: var(--accent-light);
+      margin-bottom: 1rem;
+    }
+    #sidebar nav a {
+      display: block;
+      padding: 0.5rem 0.8rem;
+      margin: 0.2rem 0;
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      transition: background 0.3s;
+      font-weight: 500;
+    }
+    #sidebar nav a:hover,
+    #sidebar nav a.active {
+      background: var(--accent);
+      color: #fff;
+    }
+    /* Topbar */
+    header {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
-      z-index: 1000;
+      height: 60px;
+      background: var(--sidebar);
+      border-bottom: 2px solid var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1rem;
+      z-index: 10;
     }
-
-    header h1 {
-      font-size: 1.3rem;
-      margin: 0;
-      color: var(--accent-light);
-    }
-
     header button {
       background: var(--accent);
       border: none;
-      padding: 0.5rem 1rem;
+      color: #fff;
+      padding: 0.4rem 0.8rem;
       border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
-      color: #fff;
-      margin-left: 0.5rem;
+      transition: background 0.2s;
     }
-
-    #sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 240px;
-      background: var(--card);
-      border-right: 2px solid var(--accent);
-      padding: 4rem 1rem 1rem;
-      box-shadow: 2px 0 8px rgba(0, 0, 0, 0.4);
-      transform: translateX(0);
-      transition: transform 0.3s ease;
-      z-index: 999;
+    header button:hover {
+      background: var(--accent-light);
     }
-
-    #sidebar.closed {
-      transform: translateX(-100%);
-    }
-
-    #sidebar nav a {
-      display: block;
-      text-decoration: none;
-      color: var(--text);
-      padding: 0.5rem 1rem;
-      border-radius: 8px;
-      margin: 0.3rem 0;
-      font-weight: bold;
-    }
-
-    #sidebar nav a:hover {
-      background: var(--accent);
-      color: #fff;
-    }
-
-    main {
+    /* Main content */
+    #content {
       flex: 1;
+      margin-left: 250px;
+      padding: 80px 2rem 2rem 2rem;
+      overflow-y: auto;
+      transition: margin-left 0.3s;
+    }
+    #sidebar.hidden ~ #content {
+      margin-left: 0;
+    }
+    section {
+      display: none;
       max-width: 800px;
-      margin: 6rem auto 2rem;
-      padding: 2rem;
+      margin: auto;
       background: var(--card);
+      padding: 2rem;
       border-radius: 15px;
       box-shadow: 0 0 15px rgba(255, 119, 233, 0.3);
-      transition: background 0.3s ease, color 0.3s ease;
     }
-
-    main h2 {
+    section.active {
+      display: block;
+    }
+    h2 {
       color: var(--accent-light);
     }
-
     .alert {
       padding: 1rem;
       margin-bottom: 2rem;
@@ -120,91 +126,85 @@
       font-weight: bold;
       text-align: center;
     }
-
     footer {
       text-align: center;
       padding: 1rem;
-      background: var(--card);
-      color: #aaa;
-      border-top: 2px solid var(--accent);
       margin-top: 2rem;
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 0.2rem 0.6rem;
-      background: var(--accent);
-      color: #fff;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      margin-right: 0.5rem;
-    }
-
-    ul {
-      line-height: 1.6;
+      color: #aaa;
     }
   </style>
 </head>
 <body>
-  <!-- Sidebar -->
+  <header>
+    <button onclick="toggleSidebar()">☰ Menu</button>
+    <button onclick="toggleTheme()">🌙/☀️ Theme</button>
+  </header>
+
   <div id="sidebar">
+    <h1>🌸 Femboy Docs</h1>
     <nav>
-      <a href="#">🏠 Home</a>
-      <a href="#">📖 Docs</a>
-      <a href="#">📰 Updates</a>
-      <a href="#">👥 Community</a>
-      <a href="#staff">💼 Staff Team</a>
+      <a href="#" onclick="showSection('home')" class="active">🏠 Home</a>
+      <a href="#" onclick="showSection('docs')">📖 Docs</a>
+      <a href="#" onclick="showSection('updates')">📰 Updates</a>
+      <a href="#" onclick="showSection('staff')">👥 Staff</a>
+      <a href="#" onclick="showSection('community')">💬 Community</a>
     </nav>
   </div>
 
-  <!-- Main content -->
-  <div style="flex:1">
-    <header>
-      <h1>🌸 Femboy Essentials Docs</h1>
-      <div>
-        <button id="toggleSidebar">☰ Menu</button>
-        <button id="toggleTheme">🌗 Theme</button>
-      </div>
-    </header>
-
-    <main>
-      <div class="alert">🚧 Femboy Essentials is currently in development and not yet released. Stay tuned! 🚧</div>
-
-      <h2>Leaf Essentials V0.2.0 Preview</h2>
-      <p><span class="tag">Status: Development Build</span></p>
-
+  <div id="content">
+    <!-- Home -->
+    <section id="home" class="active">
+      <div class="alert">🚧 Femboy Essentials is in development, not yet released! 🚧</div>
+      <h2>Welcome</h2>
       <p>
-        Welcome to the <strong>Femboy Essentials Docs</strong>!  
-        This site will serve as the official documentation hub once the project is released.  
-        For now, here’s a sneak peek at upcoming features.
+        Welcome to the <strong>Femboy Essentials Docs</strong>.  
+        This will be the official documentation hub for the project.  
+        For now, here’s a preview of what’s planned.
       </p>
+    </section>
 
-      <h3>✨ Planned Features</h3>
-      <ul>
-        <li>Customizable <strong>Femboy UI theme</strong> with pastel colors.</li>
-        <li>Docs Navigation with sidebar and categories.</li>
-        <li>In-game addon documentation support.</li>
-      </ul>
-
-      <h3>🔮 Future Goals</h3>
-      <ul>
-        <li>Public release of <em>Femboy Essentials</em>.</li>
-        <li>Community contributions and feedback loop.</li>
-        <li>Integration with addons & Minecraft Bedrock features.</li>
-      </ul>
-
-      <h3 id="staff">💼 Staff Team</h3>
-      <ul>
-        <li><strong>.uwubunny</strong> – Main Dev & Owner 🐰</li>
-        <li><strong>trashydafox</strong> – Developer & Staff 🦊</li>
-      </ul>
-
-      <h3>📌 Notes</h3>
+    <!-- Docs -->
+    <section id="docs">
+      <h2>Documentation</h2>
       <p>
-        Everything you see here is <em>work in progress</em>.  
-        Expect design changes, new sections, and early builds before the first full release.
+        📖 Here you’ll find all guides, tutorials, and reference docs for
+        <em>Femboy Essentials</em>.
       </p>
-    </main>
+      <ul>
+        <li>Setup instructions</li>
+        <li>Planned features</li>
+        <li>Addon integration</li>
+      </ul>
+    </section>
+
+    <!-- Updates -->
+    <section id="updates">
+      <h2>Updates</h2>
+      <p>🌸 Current version: <strong>Dev Build V0.2.0</strong></p>
+      <ul>
+        <li>Basic docs site structure added.</li>
+        <li>Dark/Light theme toggle.</li>
+        <li>Sidebar navigation.</li>
+      </ul>
+    </section>
+
+    <!-- Staff -->
+    <section id="staff">
+      <h2>Staff Team</h2>
+      <ul>
+        <li><strong>.uwubunny.</strong> — Main Developer & Owner 🐰</li>
+        <li><strong>trashydafox</strong> — Developer & Staff 🦊</li>
+      </ul>
+    </section>
+
+    <!-- Community -->
+    <section id="community">
+      <h2>Community</h2>
+      <p>
+        Join the Femboy Essentials community to share feedback, contribute ideas, and
+        stay up to date!
+      </p>
+    </section>
 
     <footer>
       🌸 Femboy Essentials Docs © 2025 | Still in Development 💖
@@ -212,17 +212,18 @@
   </div>
 
   <script>
-    const sidebar = document.getElementById("sidebar");
-    const toggleSidebar = document.getElementById("toggleSidebar");
-    const toggleTheme = document.getElementById("toggleTheme");
-
-    toggleSidebar.addEventListener("click", () => {
-      sidebar.classList.toggle("closed");
-    });
-
-    toggleTheme.addEventListener("click", () => {
+    function showSection(id) {
+      document.querySelectorAll("#sidebar nav a").forEach(a => a.classList.remove("active"));
+      event.target.classList.add("active");
+      document.querySelectorAll("section").forEach(s => s.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("hidden");
+    }
+    function toggleTheme() {
       document.body.classList.toggle("light");
-    });
+    }
   </script>
 </body>
 </html>
