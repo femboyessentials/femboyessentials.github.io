@@ -1,108 +1,413 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatSphere</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>PvP Rankings — MCTiers-style</title>
+<style>
+  /* ---------- BASIC THEME ---------- */
+  :root{
+    --bg:#0f1117; --panel:#15171c; --muted:#9aa2ad; --accent:#ff6b6b;
+    --card:#1b1e25; --glass: rgba(255,255,255,0.03);
+  }
+  html,body{height:100%; margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:linear-gradient(180deg,#0b0c0f 0%, #0f1117 100%); color:#e6eef6;}
+  a{color:inherit}
+  .container{max-width:1100px; margin:26px auto; padding:18px;}
+  header{display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:18px}
+  .brand{display:flex; align-items:center; gap:12px}
+  .logo{height:44px; width:44px; border-radius:8px; background:linear-gradient(135deg,#ff8a8a,#ff3b3b); display:flex; align-items:center; justify-content:center; font-weight:800; box-shadow:0 6px 20px rgba(0,0,0,0.5)}
+  .title{font-size:20px; font-weight:700}
+  .subtitle{font-size:13px; color:var(--muted)}
+  .top-actions{display:flex; gap:10px; align-items:center}
+  .btn{background:var(--accent); color:white; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; font-weight:600}
+  .ghost{background:transparent; border:1px solid rgba(255,255,255,0.04); padding:8px 10px; border-radius:8px; color:var(--muted); cursor:pointer}
+
+  /* ---------- SEARCH + FILTERS ---------- */
+  .controls{display:flex; gap:12px; align-items:center; margin-bottom:14px; flex-wrap:wrap}
+  .search {flex:1; display:flex; background:var(--panel); padding:8px 10px; border-radius:10px; align-items:center; gap:8px}
+  .search input{background:transparent; border:0; outline:none; color:inherit; width:100%; font-size:14px}
+  .chips{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+  .chip{background:var(--card); padding:6px 10px; border-radius:999px; font-size:13px; color:var(--muted); cursor:pointer; border:1px solid rgba(255,255,255,0.02)}
+  .chip.active{background:linear-gradient(90deg,#24262b,#1e2126); color:#fff; box-shadow:0 6px 20px rgba(0,0,0,0.5)}
+
+  /* ---------- LEADERBOARD ---------- */
+  .leaderboard{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,0.02)}
+  .row{display:flex; align-items:center; gap:12px; padding:12px; border-radius:10px; background:transparent; border-bottom:1px solid rgba(255,255,255,0.02)}
+  .row:hover{background:linear-gradient(90deg, rgba(255,255,255,0.01), transparent)}
+  .rank{width:56px; text-align:center; font-weight:800; font-size:18px}
+  .avatar{width:54px; height:54px; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center; background:var(--glass); flex-shrink:0; border:1px solid rgba(255,255,255,0.03)}
+  .avatar img{width:100%; height:100%; object-fit:cover}
+  .info{flex:1; min-width:0}
+  .name-row{display:flex; align-items:center; gap:10px; justify-content:space-between; align-items:flex-start}
+  .name {font-weight:700; font-size:15px}
+  .meta{color:var(--muted); font-size:13px}
+  .badges{display:flex; gap:6px; align-items:center; margin-top:8px; flex-wrap:wrap}
+  .badge{background:#22242a; color:var(--muted); padding:6px 8px; border-radius:8px; font-size:12px; border:1px solid rgba(255,255,255,0.02)}
+  .points{width:110px; text-align:right; font-weight:700; color:#fff; font-size:14px}
+  .region{padding:6px 8px; border-radius:8px; font-weight:700; font-size:12px; color:white; background:#39464a; margin-left:6px}
+
+  /* ---------- ICONS / TIER CIRCLES ---------- */
+  .tier {width:28px; height:28px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; color:#111}
+  .tier.ht{background:linear-gradient(180deg,#ffd38a,#ffb24a)}
+  .tier.lt{background:linear-gradient(180deg,#cde7ff,#8fbfff)}
+  .tier.purple{background:linear-gradient(180deg,#e5c6ff,#c08cff)}
+  .mode-icon{width:26px; height:26px; border-radius:6px; background:#22242a; display:inline-flex; align-items:center; justify-content:center; font-size:13px; color:var(--muted)}
+
+  /* ---------- ADMIN PANEL (modal) ---------- */
+  .modal-backdrop{position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:60}
+  .modal{background:linear-gradient(180deg,#0f1117,#111216); padding:18px; border-radius:12px; width:92%; max-width:720px; border:1px solid rgba(255,255,255,0.03)}
+  .modal h3{margin:0 0 12px 0}
+  .form-row{display:flex; gap:8px; margin-bottom:10px}
+  .form-row .col{flex:1}
+  input[type="text"], input[type="number"], select, textarea{
+    width:100%; padding:8px 10px; border-radius:8px; background:#0f1318; color:inherit; border:1px solid rgba(255,255,255,0.03); outline:none; font-size:14px;
+  }
+  label{font-size:13px; color:var(--muted); display:block; margin-bottom:6px}
+  .small{font-size:12px; color:var(--muted)}
+  .admin-actions{display:flex; gap:8px; justify-content:flex-end; margin-top:10px}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:720px){
+    .name-row{flex-direction:column; align-items:flex-start; gap:8px}
+    .points{width:88px; text-align:left}
+    header{flex-direction:column; align-items:flex-start; gap:12px}
+    .controls{flex-direction:column; align-items:stretch}
+    .form-row{flex-direction:column}
+  }
+</style>
 </head>
 <body>
-    <!-- Authentication Screen -->
-    <div id="auth-container">
-        <div class="auth-box">
-            <img src="logo.png" alt="ChatSphere Logo" class="auth-logo">
-            <div id="login-view">
-                <h2>Welcome Back!</h2>
-                <p>We're so excited to see you again!</p>
-                <form id="login-form">
-                    <div class="input-group">
-                        <label for="login-username">USERNAME</label>
-                        <input type="text" id="login-username" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="login-password">PASSWORD</label>
-                        <input type="password" id="login-password" required>
-                    </div>
-                    <button type="submit">Log In</button>
-                    <p class="switch-auth">Need an account? <a href="#" id="show-signup">Register</a></p>
-                </form>
-            </div>
-            <div id="signup-view" class="hidden">
-                <h2>Create an Account</h2>
-                <form id="signup-form">
-                    <div class="input-group">
-                        <label for="signup-username">USERNAME</label>
-                        <input type="text" id="signup-username" required>
-                    </div>
-                    <div class="input-group">
-                        <label for="signup-password">PASSWORD</label>
-                        <input type="password" id="signup-password" required>
-                    </div>
-                    <button type="submit">Continue</button>
-                    <p class="switch-auth"><a href="#" id="show-login">Already have an account?</a></p>
-                </form>
-            </div>
-        </div>
+<div class="container">
+  <header>
+    <div class="brand">
+      <div class="logo">SK</div>
+      <div>
+        <div class="title">PvP Rankings — MCTiers-style</div>
+        <div class="subtitle">Player leaderboards for PvP practice modes — localStorage powered</div>
+      </div>
     </div>
 
-    <!-- Main App -->
-    <div id="main-app" class="hidden">
-        <nav class="servers-list">
-            <!-- Server icons will be injected here -->
-            <div class="server-icon add-server" id="add-server-btn">
-                <img src="add-server-icon.png" alt="Add a Sphere">
-            </div>
-        </nav>
-        <div class="channels-panel">
-            <header class="server-header">
-                <h1 id="server-name">Select a Sphere</h1>
-            </header>
-            <div class="channels-list" id="channels-list">
-                <!-- Channels will be injected here -->
-            </div>
-            <div class="user-panel">
-                <div id="user-info">
-                    <img src="default-user-icon.png" class="avatar">
-                    <span id="username-display"></span>
-                </div>
-                <button id="logout-btn">Logout</button>
-            </div>
-        </div>
-        <main class="chat-area">
-            <header class="chat-header">
-                <h2 id="channel-name"></h2>
-            </header>
-            <div class="messages-container" id="messages-container">
-                <!-- Messages will be injected here -->
-            </div>
-            <div class="message-input-container">
-                <input type="text" id="message-input" placeholder="Message #channel">
-            </div>
-        </main>
+    <div class="top-actions">
+      <button id="openAdminBtn" class="ghost" title="Admin">⚙️ Admin</button>
+      <button id="resetBtn" class="ghost" title="Reset sample data">♻ Reset</button>
+      <a class="btn" id="addQuickBtn">+ Add Player</a>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style="opacity:.8"><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path><circle cx="11" cy="11" r="6" stroke="currentColor" stroke-width="1.6"></circle></svg>
+      <input id="searchInput" placeholder="Search player IGN..." />
     </div>
 
-    <!-- Add Server Modal -->
-    <div id="add-server-modal" class="modal-background hidden">
-        <div class="modal-content">
-            <h2>Create Your Sphere</h2>
-            <p>Give your new Sphere a personality with a name. You can always change it later.</p>
-            <form id="add-server-form">
-                <div class="input-group">
-                    <label for="new-server-name">SPHERE NAME</label>
-                    <input type="text" id="new-server-name" required>
-                </div>
-                <div class="modal-actions">
-                    <button type="button" id="close-modal-btn">Back</button>
-                    <button type="submit">Create</button>
-                </div>
-            </form>
-        </div>
+    <div class="chips" id="modeChips">
+      <div class="chip active" data-mode="all">Overall</div>
+      <div class="chip" data-mode="vanilla">Vanilla</div>
+      <div class="chip" data-mode="pot">Pot</div>
+      <div class="chip" data-mode="uhc">UHC</div>
+      <div class="chip" data-mode="sword">Sword</div>
+      <div class="chip" data-mode="nether">NethOP</div>
     </div>
+  </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+  <div class="leaderboard" id="leaderboard">
+    <!-- rows injected by JS -->
+  </div>
 
+  <div style="margin-top:12px; color:var(--muted); font-size:13px">
+    Tip: Use the Admin (⚙️) to add players. Data saves to your browser's <code>localStorage</code>.
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div id="modal" style="display:none;">
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+      <h3 id="modalTitle">Admin Panel — Login</h3>
+      <div id="loginView">
+        <label>Enter admin password</label>
+        <input id="adminPassword" type="password" placeholder="Password" />
+        <div class="admin-actions">
+          <button class="ghost" id="closeModal">Cancel</button>
+          <button class="btn" id="doLogin">Unlock</button>
+        </div>
+        <div style="margin-top:8px" class="small">Default password is <code>admin123</code>. Change it inside the file to something else for safety.</div>
+      </div>
+
+      <div id="adminView" style="display:none">
+        <label>Add / Edit Player</label>
+        <div class="form-row">
+          <div class="col">
+            <label>IGN / Name</label>
+            <input id="pName" type="text" placeholder="Marlowww" />
+          </div>
+          <div style="width:110px">
+            <label>Rank</label>
+            <input id="pRank" type="number" min="1" placeholder="1" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col">
+            <label>Points</label>
+            <input id="pPoints" type="number" min="0" placeholder="405" />
+          </div>
+          <div style="width:150px">
+            <label>Region</label>
+            <select id="pRegion">
+              <option value="NA">NA</option>
+              <option value="EU">EU</option>
+              <option value="AS">AS</option>
+              <option value="">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col">
+            <label>Avatar URL (optional)</label>
+            <input id="pAvatar" type="text" placeholder="https://mc-heads.net/avatar/IGN" />
+          </div>
+          <div style="width:160px">
+            <label>Mode Tags</label>
+            <select id="pModes" multiple size="3" style="height:100%; padding:8px;">
+              <option value="vanilla">vanilla</option>
+              <option value="pot">pot</option>
+              <option value="uhc">uhc</option>
+              <option value="sword">sword</option>
+              <option value="nether">nethop</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="col">
+            <label>Tiers (comma separated)</label>
+            <input id="pTiers" placeholder="HT1, LT2, purple" />
+            <div class="small">Examples: HT1, LT2, purple — these will display as colored badges</div>
+          </div>
+        </div>
+
+        <div style="display:flex; gap:8px; align-items:center; margin-top:10px">
+          <button class="btn" id="savePlayer">Save Player</button>
+          <button class="ghost" id="clearForm">Clear</button>
+          <button class="ghost" id="logout">Lock Admin</button>
+        </div>
+
+        <hr style="margin:12px 0; border-color: rgba(255,255,255,0.03)" />
+        <div>
+          <h4 style="margin:0 0 10px 0">Manage Players</h4>
+          <div id="adminList" style="max-height:260px; overflow:auto"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================
+   Single-file MCTiers-style leaderboard
+   - localStorage key: "pvp_players"
+   - Default admin password: admin123 (change in code if needed)
+   ========================= */
+
+const STORAGE_KEY = 'pvp_players';
+const ADMIN_PASSWORD = 'admin123'; // change this in the file for security
+
+/* ---------- Sample data (will be used on first run or when Reset) ---------- */
+const SAMPLE = [
+  { id: uid(), rank:1, name:'Marlowww', points:405, region:'NA', avatar:'https://mc-heads.net/avatar/Marlowww', modes:['vanilla','pot'], tiers:['HT1','HT1','LT1'] },
+  { id: uid(), rank:2, name:'ItzRealMe', points:330, region:'NA', avatar:'https://mc-heads.net/avatar/ItzRealMe', modes:['vanilla'], tiers:['HT1','HT2'] },
+  { id: uid(), rank:3, name:'Swight', points:260, region:'NA', avatar:'https://mc-heads.net/avatar/Swight', modes:['pot','sword'], tiers:['LT1','LT2'] },
+  { id: uid(), rank:4, name:'Coldified', points:226, region:'EU', avatar:'https://mc-heads.net/avatar/Coldified', modes:['vanilla','nethop'], tiers:['HT2','purple'] },
+  { id: uid(), rank:5, name:'Kylaz', points:222, region:'NA', avatar:'https://mc-heads.net/avatar/Kylaz', modes:['vanilla','pot'], tiers:['LT1','LT3'] },
+];
+
+/* ---------- Utilities ---------- */
+function uid(){ return 'id_' + Math.random().toString(36).slice(2,9); }
+function savePlayers(arr){ localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+function loadPlayers(){ try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || null }catch(e){return null} }
+
+/* ---------- Application state ---------- */
+let players = loadPlayers();
+if(!players){ players = SAMPLE; savePlayers(players); }
+
+let currentMode = 'all';
+let searchQ = '';
+
+/* ---------- DOM references ---------- */
+const board = document.getElementById('leaderboard');
+const searchInput = document.getElementById('searchInput');
+const chips = document.querySelectorAll('.chip');
+const modal = document.getElementById('modal');
+const openAdminBtn = document.getElementById('openAdminBtn');
+const resetBtn = document.getElementById('resetBtn');
+const addQuickBtn = document.getElementById('addQuickBtn');
+
+const modalBackdrop = document.getElementById('modalBackdrop');
+const loginView = document.getElementById('loginView');
+const adminView = document.getElementById('adminView');
+const adminTitle = document.getElementById('modalTitle');
+const adminPassword = document.getElementById('adminPassword');
+const doLogin = document.getElementById('doLogin');
+const closeModal = document.getElementById('closeModal');
+
+const pName = document.getElementById('pName');
+const pRank = document.getElementById('pRank');
+const pPoints = document.getElementById('pPoints');
+const pRegion = document.getElementById('pRegion');
+const pAvatar = document.getElementById('pAvatar');
+const pModes = document.getElementById('pModes');
+const pTiers = document.getElementById('pTiers');
+const savePlayerBtn = document.getElementById('savePlayer');
+const clearFormBtn = document.getElementById('clearForm');
+const logoutBtn = document.getElementById('logout');
+const adminList = document.getElementById('adminList');
+
+let editingId = null;
+let adminUnlocked = false;
+
+/* ---------- Render functions ---------- */
+function render(){
+  // Filter & sort
+  let out = players.slice();
+  if(currentMode !== 'all') out = out.filter(p => p.modes && p.modes.includes(currentMode));
+  if(searchQ.trim()) {
+    const q = searchQ.trim().toLowerCase();
+    out = out.filter(p => (p.name || '').toLowerCase().includes(q));
+  }
+  out.sort((a,b) => (Number(a.rank) || 9999) - (Number(b.rank) || 9999));
+
+  board.innerHTML = '';
+  out.forEach(p => {
+    board.appendChild(renderRow(p));
+  });
+
+  renderAdminList();
+}
+
+function renderRow(p){
+  const row = document.createElement('div');
+  row.className = 'row';
+
+  const rank = document.createElement('div'); rank.className='rank'; rank.textContent = '#' + (p.rank || '-');
+
+  const avatarWrap = document.createElement('div'); avatarWrap.className='avatar';
+  const img = document.createElement('img');
+  img.src = p.avatar || `https://mc-heads.net/avatar/${encodeURIComponent(p.name || 'Steve')}`;
+  img.alt = p.name || 'player';
+  avatarWrap.appendChild(img);
+
+  const info = document.createElement('div'); info.className='info';
+  const nameRow = document.createElement('div'); nameRow.className='name-row';
+  const nameLeft = document.createElement('div');
+  const nameEl = document.createElement('div'); nameEl.className='name'; nameEl.textContent = p.name || 'Unknown';
+  const meta = document.createElement('div'); meta.className='meta'; meta.innerHTML = `<span class="region">${p.region || ''}</span> • <span style="color:var(--muted)">${p.rank ? p.points + ' pts' : (p.points||0)+' pts'}</span>`;
+  nameLeft.appendChild(nameEl);
+  nameLeft.appendChild(meta);
+
+  // right side small actions / join button (example)
+  const right = document.createElement('div');
+  right.style.display='flex';
+  right.style.alignItems='center';
+  right.style.gap='8px';
+  const join = document.createElement('a'); join.className='btn'; join.textContent='View'; join.href='#'; join.onclick = (e)=>{ e.preventDefault(); alert(`${p.name} — Points: ${p.points}\nModes: ${ (p.modes||[]).join(', ')}`) };
+
+  right.appendChild(join);
+  nameRow.appendChild(nameLeft);
+  nameRow.appendChild(right);
+
+  // badges row
+  const badges = document.createElement('div'); badges.className='badges';
+  // render mode icons
+  (p.modes||[]).slice(0,5).forEach(m=>{
+    const span = document.createElement('div'); span.className='mode-icon'; span.title = m;
+    span.textContent = modeChar(m);
+    badges.appendChild(span);
+  });
+  // render tiers
+  (p.tiers||[]).slice(0,8).forEach(t=>{
+    const b = document.createElement('div'); b.className='badge';
+    // color-like small circle
+    const colorSpan = document.createElement('span');
+    const cls = 'tier ' + (t.toLowerCase().startsWith('ht') ? 'ht' : (t.toLowerCase().startsWith('lt') ? 'lt' : 'purple'));
+    const circ = document.createElement('span'); circ.className = cls; circ.style.marginRight='8px'; circ.textContent = t.replace(/\s+/g,'').toUpperCase();
+    b.appendChild(circ);
+    badges.appendChild(b);
+  });
+
+  // points column
+  const points = document.createElement('div'); points.className='points'; points.textContent = (p.points || 0) + ' pts';
+
+  info.appendChild(nameRow);
+  info.appendChild(badges);
+
+  row.appendChild(rank);
+  row.appendChild(avatarWrap);
+  row.appendChild(info);
+  row.appendChild(points);
+
+  // if admin unlocked, show edit/delete on hover as small buttons
+  if(adminUnlocked){
+    const adminBtns = document.createElement('div'); adminBtns.style.marginLeft='12px'; adminBtns.style.display='flex'; adminBtns.style.gap='6px';
+    const edit = document.createElement('button'); edit.className='ghost'; edit.textContent='Edit';
+    edit.onclick = ()=>{ openAdmin(); populateFormForEdit(p); };
+    const del = document.createElement('button'); del.className='ghost'; del.textContent='Delete';
+    del.onclick = ()=>{ if(confirm('Delete player '+p.name+'?')){ players = players.filter(x=>x.id!==p.id); savePlayers(players); render(); } };
+    adminBtns.appendChild(edit); adminBtns.appendChild(del);
+    row.appendChild(adminBtns);
+  }
+
+  return row;
+}
+
+function modeChar(m){
+  const map = { vanilla: 'V', pot:'🍯', uhc:'⛏', sword:'⚔️', nethop:'⛓' };
+  return map[m] || m[0]?.toUpperCase() || '?';
+}
+
+/* ---------- Admin UI ---------- */
+openAdminBtn.addEventListener('click', ()=>{ showModal(); });
+
+resetBtn.addEventListener('click', ()=>{ if(confirm('Reset to sample data? This will overwrite current local data.')){ players = SAMPLE.slice(); savePlayers(players); render(); alert('Reset complete'); } });
+
+addQuickBtn.addEventListener('click', ()=>{ showModal(); unlockAdmin(); populateFormForNew(); });
+
+searchInput.addEventListener('input', (e)=>{ searchQ = e.target.value; render(); });
+
+chips.forEach(chip=>{
+  chip.addEventListener('click', ()=>{
+    chips.forEach(c=>c.classList.remove('active'));
+    chip.classList.add('active');
+    currentMode = chip.dataset.mode;
+    render();
+  });
+});
+
+/* Modal controls */
+function showModal(){ modal.style.display='block'; document.getElementById('modal').style.display='block'; document.body.style.overflow='hidden'; adminPassword.value=''; adminPassword.focus(); loginView.style.display = 'block'; adminView.style.display='none'; adminTitle.textContent='Admin Panel — Login'; }
+function closeModalFunc(){ modal.style.display='none'; document.getElementById('modal').style.display='none'; document.body.style.overflow='auto'; adminUnlocked=false; unlockUI(false); }
+closeModal.addEventListener('click', closeModalFunc);
+modalBackdrop.addEventListener('click', (e)=>{ if(e.target === modalBackdrop) closeModalFunc(); });
+
+doLogin.addEventListener('click', ()=>{ const pw = adminPassword.value || ''; if(pw === ADMIN_PASSWORD){ unlockAdmin(); } else { alert('Wrong password'); } });
+
+function unlockAdmin(){ adminUnlocked = true; loginView.style.display='none'; adminView.style.display='block'; adminTitle.textContent='Admin Panel — Manage Players'; unlockUI(true); render(); }
+
+/* admin UI toggles */
+function unlockUI(val){
+  if(val){
+    adminView.style.display='block';
+    loginView.style.display='none';
+  } else {
+    adminView.style.display='none';
+    loginView.style.display='block';
+  }
+}
+
+logoutBtn.addEventListener('click', ()=>{ adminUnlocked=false; unlockUI(false); render(); });
+
+/* Form actions */
+function populateFormForNew(){
+  editingId = null;
+  pName.value=''; pRank.value=''; pPoints.value=''; pRegion.value='NA
